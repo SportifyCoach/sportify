@@ -26,4 +26,5 @@ connection.promise().connect()
         console.error('Error trying to connect with MySQL:', err);
     });
 
+    
 module.exports = app;
