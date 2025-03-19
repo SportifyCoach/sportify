@@ -1,0 +1,16 @@
+# Node.js dependencies
+**/node_modules/
+**/npm-debug.log
+**/yarn-error.log
+**/package-lock.json
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+
+# Temporary files
+tmp/
+temp/
