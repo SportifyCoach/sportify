@@ -9,33 +9,38 @@
 </head>
 
 <body>
-    <div class="top-bar">
-        <div class="title">
-            <img class="logo" src="img/logo.png" alt="logo">
-            <h1>Sportify Coach</h1>
-        </div>
-        <div class="menu">
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="esportistes.html"><strong>Esportistes</strong></a></li>
-                    <li><a href="entrenadors.html">Entrenadors</a></li>
-                    <li><a href="sessions.html">Sessions</a></li>
-                    <li><a href="disciplines.html">Disciplines</a></li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-    <div class="container">
-        <h2>Esportistes</h2>
-        <div class="crud">
-            <div class="crud-top">
-                <button>Afegeix esportista</button>
-                <input class="search-bar" id="search-bar" type="text" placeholder="Cerca esportista">
+    <div class="main">
+        <div class="top-bar">
+            <div class="title">
+                <img class="logo" src="img/logo.png" alt="logo">
+                <h1>Sportify Coach</h1>
             </div>
-            <div class="crud-content" id="table">Esto se ha de hacer en js</div>
+            <div class="menu">
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="esportistes.html"><strong>Esportistes</strong></a></li>
+                        <li><a href="entrenadors.html">Entrenadors</a></li>
+                        <li><a href="sessions.html">Sessions</a></li>
+                        <li><a href="disciplines.html">Disciplines</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="container">
+            <h2>Esportistes</h2>
+            <div class="crud">
+                <div class="crud-top">
+                    <button>Afegeix esportista</button>
+                    <input class="search-bar" id="search-bar" type="text" placeholder="Cerca esportista">
+                </div>
+                <div class="crud-content" id="table"></div>
+            </div>
         </div>
     </div>
+
+    <script src="js/esportistes.js" defer></script>
+
 </body>
 
 </html>
