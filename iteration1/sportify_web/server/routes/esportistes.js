@@ -4,4 +4,8 @@ const esportistaController = require('../controllers/esportistaController');
 
 router.get('/', esportistaController.getAllEsportistes);
 
+// PUT o PATCH para actualizar un deportista
+router.put('/:dni', esportistaController.updateEsportista);
+
+
 module.exports = router;

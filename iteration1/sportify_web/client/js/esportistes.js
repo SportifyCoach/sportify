@@ -22,7 +22,7 @@ function renderTable(esportistes) {
                 <td>${esportista.dni}</td>
                 <td>${esportista.tlf}</td>
                 <td>${esportista.email}</td>
-                <td><button class="btn btn-primary">Update</button></td>
+                <td><button class="btn btn-primary" onclick="goToUpdate('${esportista.dni}')">Update</button></td>
                 <td><button class="btn btn-danger">Delete</button></td>
             </tr>
         `;
@@ -53,6 +53,10 @@ function loadEsportistes() {
                 `<p class="text-danger">Error al carregar els esportistes.</p>`;
         });
 }
+
+function goToUpdate(dni) {
+    window.location.href = `update.html?dni=${dni}`;
+  }
 
 function setupSearch() {
     const searchInput = document.getElementById('search-bar');
