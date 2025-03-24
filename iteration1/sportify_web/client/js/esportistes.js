@@ -73,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadEsportistes();
     setupSearch();
 });
-document.addEventListener('DOMContentLoaded', loadEsportistes);
 
 const obrirPopup = document.getElementById("obrirPopup");
 const popupFons = document.getElementById("popupFons");
