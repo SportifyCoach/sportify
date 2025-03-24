@@ -85,3 +85,69 @@ h2 {
     width: 300px;
 }
 
+/* Botó principal */
+#obrirPopup {
+    margin: 2em;
+    padding: 0.8em 2em;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+/* Fons del popup */
+.popup-fons {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Contingut del popup */
+.popup {
+    background: white;
+    padding: 2em;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+/* Tanca (X) */
+.tancar-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+/* Inputs del formulari */
+form input, form button {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.6em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
+form button:hover {
+    background-color: #005fa3;
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
