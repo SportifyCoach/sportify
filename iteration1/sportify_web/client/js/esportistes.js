@@ -54,27 +54,6 @@ function loadEsportistes() {
         });
 }
 
-<<<<<<< HEAD
-function goToUpdate(dni) {
-    window.location.href = `update.html?dni=${dni}`;
-  }
-
-function setupSearch() {
-    const searchInput = document.getElementById('search-bar');
-    searchInput.addEventListener('input', () => {
-        const query = searchInput.value.trim().toLowerCase();
-        const filtered = allEsportistes.filter(e =>
-            e.dni.toLowerCase().includes(query)
-        );
-        renderTable(filtered);
-    });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadEsportistes();
-    setupSearch();
-});
-=======
 document.addEventListener('DOMContentLoaded', loadEsportistes);
 
 const obrirPopup = document.getElementById("obrirPopup");
@@ -136,4 +115,3 @@ registreForm.addEventListener('submit', (e) => {
         missatge.textContent = err.message;
     });
 });
->>>>>>> d2ae166 (registre d'esportistes)
