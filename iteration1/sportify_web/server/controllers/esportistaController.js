@@ -73,3 +73,20 @@ exports.createEsportista = (req, res) => {
         res.status(201).send('Esportista creat correctament');
     });
 };
+
+exports.deleteEsportista = (req, res) => {
+    const { dni } = req.params;
+
+    connection.query('DELETE FROM esportista WHERE dni = ?', [dni], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Error al eliminar l\'esportista');
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).send('No s\'ha trobat cap esportista amb aquest DNI');
+        }
+
+        res.status(200).send('Esportista eliminat correctament');
+    });
+};

@@ -93,7 +93,7 @@ h2 {
     width: 300px;
 }
 
-/* Botó principal */
+/* BotÃ³ principal */
 #obrirPopup {
     padding: 5px;
     font-size: 0.9em;
@@ -204,4 +204,18 @@ form button:hover {
 .error {
     color: red;
     text-align: center;
+}
+
+/* BotÃ³ eliminar (vermell) */
+.btn-danger {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.6em;
+    margin-bottom: 1em;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
 }

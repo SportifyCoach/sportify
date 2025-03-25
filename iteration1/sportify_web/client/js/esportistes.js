@@ -7,7 +7,7 @@ function renderTable(esportistes) {
             <thead>
                 <tr>
                     <th>DNI</th>
-                    <th>Telèfon</th>
+                    <th>TelÃ¨fon</th>
                     <th>Email</th>
                     <th>Update</th>
                     <th>Delete</th>
@@ -23,7 +23,7 @@ function renderTable(esportistes) {
                 <td>${esportista.tlf}</td>
                 <td>${esportista.email}</td>
                 <td><button class="btn btn-primary" onclick="goToUpdate('${esportista.dni}')">Update</button></td>
-                <td><button class="btn btn-danger">Delete</button></td>
+                <td><button class="btn btn-danger" onclick="confirmDelete('${esportista.dni}')">Delete</button></td>
             </tr>
         `;
     });
@@ -132,4 +132,57 @@ registreForm.addEventListener('submit', (e) => {
         missatge.style.color = 'red';
         missatge.textContent = err.message;
     });
+});
+
+let dniAEliminar = null;
+
+const popupFonsDelete = document.getElementById("popupFonsDelete");
+const tancarPopupDelete = document.getElementById("tancarPopupDelete");
+const confirmarDelete = document.getElementById("confirmarDelete");
+const cancelarDelete = document.getElementById("cancelarDelete");
+const textConfirmacio = document.getElementById("textConfirmacio");
+
+function confirmDelete(dni) {
+    dniAEliminar = dni;
+    textConfirmacio.textContent = `EstÃ s segur que vols eliminar l'esportista amb DNI ${dni}?`;
+    popupFonsDelete.style.display = "flex";
+}
+
+confirmarDelete.addEventListener("click", () => {
+    if (!dniAEliminar) return;
+
+    fetch(`http://localhost:3000/esportistes/${dniAEliminar}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("No s'ha pogut eliminar l'esportista");
+        return response.text();
+    })
+    .then(msg => {
+        popupFonsDelete.style.display = "none";
+        dniAEliminar = null;
+        loadEsportistes();
+    })
+    .catch(err => {
+        alert("Error: " + err.message);
+        popupFonsDelete.style.display = "none";
+        dniAEliminar = null;
+    });
+});
+
+cancelarDelete.addEventListener("click", () => {
+    popupFonsDelete.style.display = "none";
+    dniAEliminar = null;
+});
+
+tancarPopupDelete.addEventListener("click", () => {
+    popupFonsDelete.style.display = "none";
+    dniAEliminar = null;
+});
+
+window.addEventListener("click", (e) => {
+    if (e.target === popupFonsDelete) {
+        popupFonsDelete.style.display = "none";
+        dniAEliminar = null;
+    }
 });
