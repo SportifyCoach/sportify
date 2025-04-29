@@ -7,7 +7,7 @@ function renderTable(esportistes) {
             <thead>
                 <tr>
                     <th>DNI</th>
-                    <th>TelÃ¨fon</th>
+                    <th>Telèfon</th>
                     <th>Email</th>
                     <th>Update</th>
                     <th>Delete</th>
@@ -144,7 +144,7 @@ const textConfirmacio = document.getElementById("textConfirmacio");
 
 function confirmDelete(dni) {
     dniAEliminar = dni;
-    textConfirmacio.textContent = `EstÃ s segur que vols eliminar l'esportista amb DNI ${dni}?`;
+    textConfirmacio.textContent = `Estàs segur que vols eliminar l'esportista amb DNI ${dni}?`;
     popupFonsDelete.style.display = "flex";
 }
 
