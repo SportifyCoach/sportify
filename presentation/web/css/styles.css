@@ -1,0 +1,221 @@
+body {
+    font-family: Arial, sans-serif;
+    color: #2b2b2b;
+    margin: 0;
+    padding: 0;
+    background-color: #2b2b2b;
+}
+
+a:visited {
+    color: inherit;
+}
+
+.main {
+    max-width: 800px;
+    min-height: 95.7vh;
+    margin: 0 auto;
+    padding: 20px 60px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+.top-bar {
+    margin: 10px 0;
+    padding: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    border-bottom: 1px solid black;
+}
+
+.title {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid black;
+}
+
+.logo {
+    height: 70px;
+}
+
+h1 {
+    font-size: 4em;
+    margin: 5px;
+    font-family: 'Archivo Black', sans-serif;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 30px;
+    padding: 5px 0;
+}
+
+nav ul li a {
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav ul li a:hover {
+    color: #956ce0;
+}
+
+.container {
+    margin: 10px;
+    padding: 10px;
+}
+
+h2 {
+    font-size: 2.5em;
+    margin: 5px 0 20px 0;
+}
+
+.crud-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 10px 0;
+}
+
+.search-bar {
+    width: 300px;
+}
+
+/* BotÃ³ principal */
+#obrirPopup {
+    padding: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+/* Fons del popup */
+.popup-fons {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Contingut del popup */
+.popup {
+    background: white;
+    padding: 2em;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+/* Tanca (X) */
+.tancar-popup {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+/* Inputs del formulari */
+form input, form button {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.6em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+form button {
+    background-color: #0077cc;
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
+form button:hover {
+    background-color: #005fa3;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+}
+
+.table th, .table td {
+    padding: 0.8em;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table button {
+    padding: 0.4em 0.8em;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.btn-primary {
+    background-color: #75aaff;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #417fdd;
+}
+
+.btn-danger {
+    background-color: #f15a4f;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #ca3e36;
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+/* BotÃ³ eliminar (vermell) */
+.btn-danger {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.6em;
+    margin-bottom: 1em;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="img/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+    <title>Sportify Coach</title>
+</head>
+
+<body>
+    <div class="main">
+        <div class="top-bar">
+            <div class="title">
+                <img class="logo" src="img/logo.png" alt="logo">
+                <h1>Sportify Coach</h1>
+            </div>
+            <div class="menu">
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="esportistes.html"><strong>Esportistes</strong></a></li>
+                        <li><a href="entrenadors.html">Entrenadors</a></li>
+                        <li><a href="sessions.html">Sessions</a></li>
+                        <li><a href="disciplines.html">Disciplines</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="container">
+            <!-- Fons fosc + Popup -->
+            <div id="popupFons" class="popup-fons">
+                <div class="popup">
+                    <span class="tancar-popup" id="tancarPopup">&times;</span>
+                    <h2>Registre d'Esportista</h2>
+                    <form id="registreForm">
+                        <label for="dni">DNI:</label>
+                        <input type="text" id="dni" name="dni" required>
+                        <!--
+                    <label for="nom">Nom:</label>
+                    <input type="text" id="nom" name="nom" required>
+
+                    <label for="cognoms">Cognoms:</label>
+                    <input type="text" id="cognoms" name="cognoms" required>
+                        -->
+                        <label for="tlf">Telèfon mòbil:</label>
+                        <input type="tlf" id="tlf" name="tlf" required>
+
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                        <!--
+                    <label for="contrasenya">Contrasenya:</label>
+                    <input type="password" id="contrasenya" name="contrasenya" required>
+
+                    <label for="confirmar">Confirmar contrasenya:</label>
+                    <input type="password" id="confirmar" name="confirmar" required>
+                        -->
+                        <button type="submit">Enviar</button>
+                        <p id="missatge" class="error"></p>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Fons fosc + Popup de confirmació d'eliminació -->
+            <div id="popupFonsDelete" class="popup-fons">
+                <div class="popup">
+                    <span class="tancar-popup" id="tancarPopupDelete">&times;</span>
+                    <h2>Confirmar eliminació</h2>
+                    <p id="textConfirmacio">Estàs segur que vols eliminar aquest esportista?</p>
+                    <button id="confirmarDelete" class="btn-danger">Sí, eliminar</button>
+                    <button id="cancelarDelete">Cancel·lar</button>
+                </div>
+            </div>
+
+            <h2>Esportistes</h2>
+            <div class="crud">
+                <div class="crud-top">
+                    <button id="obrirPopup">Registrar esportista</button>
+                    <input class="search-bar" id="search-bar" type="text" placeholder="Cerca esportista per dni">
+                </div>
+                <div class="crud-content" id="table"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/esportistes.js" defer></script>
+
+</body>
+
+</html>

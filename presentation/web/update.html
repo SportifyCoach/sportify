@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="img/logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+  <title>Update Esportista</title>
+</head>
+
+<body>
+  <div class="main">
+    <div class="top-bar">
+      <div class="title">
+        <img class="logo" src="img/logo.png" alt="logo">
+        <h1>Sportify Coach</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="esportistes.html">Esportistes</a></li>
+          <li><a href="entrenadors.html">Entrenadors</a></li>
+          <li><a href="sessions.html">Sessions</a></li>
+          <li><a href="disciplines.html">Disciplines</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="container">
+      <h2>Editar esportista</h2>
+      <form id="update-form">
+        <input type="hidden" id="dni" />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" required><br><br>
+
+        <label for="tlf">Telèfon:</label>
+        <input type="text" id="tlf" required><br><br>
+
+        <button type="submit">Guardar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/update.js"></script>
+</body>
+
+</html>
