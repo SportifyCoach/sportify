@@ -1,21 +1,27 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
-const connection = mysql.createConnection({
+let pool;
+
+function connect() {
+  pool = mysql.createPool({
     host: "ubiwan.epsevg.upc.edu",
     port: '3306',
     user: "amep10",
     password: "iKae6iePa7aiH6",
-    database: "amep10"
-})
+    database: "amep10",
+    namedPlaceholders: true, // para poder usar ":dni", etc.
+  });
 
-function connect() {
-    return connection
-      .promise()
-      .connect()
-      .then(() => {
-        console.log('[DB] Connexió MySQL correcta');
-        return connection;          // retornem la connexió per si la vols usar
-      });
-  }
-  
-module.exports = { connect, connection };
+  return pool.getConnection()
+    .then(conn => {
+      console.log('[DB] Connexió MySQL correcta');
+      conn.release();
+    });
+}
+
+function getPool() {
+  if (!pool) throw new Error('DB no inicialitzada!');
+  return pool;
+}
+
+module.exports = { connect, getPool };
