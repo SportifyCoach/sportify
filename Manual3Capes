@@ -1,0 +1,84 @@
+sportify_web/
+├── presentation/                 ← Capa de presentació
+│   ├── web/                      ← SPA / Pàgines estàtiques
+│   │   ├── css/
+│   │   ├── img/
+│   │   ├── js/                   ← Només codi d’interfície (fetch, DOM…)
+│   │   │   ├── esportistes.js 	  ← Fa crides al back-end
+│   │   ├── index.html
+│   │   ├── esportistes.html
+│   │   └── update.html
+│   └── server/                   ← Entrades HTTP (routes + controllers “fins la UI”)
+│       ├── routes/
+│       │   └── esportistes.routes.js
+│       └── controllers/
+│           └── esportistes.controller.js
+│
+├── domain/                       ← Capa de domini (regles de negoci)
+│   ├── entities/                 ← Esquemes POJO/Classes
+│   │   └── Esportista.js
+│   ├── services/                 ← Casos d’ús / lògica d’aplicació
+│   │   └── EsportistaService.js
+│   └── errors.js                 ← Errors personalitzats de negoci
+│
+├── data/                         ← Capa de dades (persistència)
+│   ├── models/                   ← Esquemes Mongoose
+│   │   └── esportista.model.js
+│   ├── repositories/             ← CRUD pur contra DB
+│   │   └── EsportistaRepository.js
+│   └── db/                       ← Config i connexió
+│       └── index.js
+│
+├── app.js                        ← Config global d’Express (middle-wares)
+└── server.js                     ← Bootstrap: aixeca el servidor
+
+
+
+[Browser] --HTTP--> presentation/routes  -> controller  -> domain/service
+                                                         |
+                                                         v
+                                                   data/repository -> DB
+                                                   
+
+
+
+
+| **Capa / carpeta**                  | **Responsabilitat**                               | **Contingut típic**                                       | **Mai ha de…**                                         |
+| ----------------------------------- | ------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------ |
+| **presentation/web**                | Interfície d’usuari: HTML · CSS · JS al navegador | Pàgines, CSS, imatges, scripts que fan `fetch` a l’API    | Accedir directament a la BD, contenir lògica de negoci |
+| **presentation/server/routes**      | Definició d’URLs HTTP ✓                           | Fitxers `*.routes.js` amb instàncies d’`express.Router()` | Implementar la lògica; només delega al controller      |
+| **presentation/server/controllers** | Adaptar Request ↔ Response                        | Valida, crida el servei i decideix codi de resposta       | Executar queries Mongoose, escriure regla de negoci    |
+| **domain/entities**                 | Models purs de negoci                             | Classes simples (sense frameworks)                        | Contenir codi d’Express o Mongoose                     |
+| **domain/services**                 | Casos d’ús / Regles de negoci                     | Ex: `esportista.service.js`                               | Fer `res.json`, conèixer la forma del transport HTTP   |
+| **data/models**                     | Mapeig amb BD                                     | Esquemes Mongoose                                         | Implementar regles complexes (es deleguen al domini)   |
+| **data/repositories**               | CRUD brut                                         | Operacions contra els models                              | Detectar permisos, validar negocis                     |
+| **data/db**                         | Connexió i config BD                              | Únic punt de contacte amb Mongoose.connect                | —                                                      |
+| **app.js**                          | Config express + middlewares                      | Carrega rutes, static, errors, BD                         | Afegir lògica de negoci important                      |
+| **server.js**                       | Arrencada                                         | `app.listen`                                              | —                                                      |
+
+
+Bones pràctiques
+
+    Imports sempre cap avall: Presentació → Domini → Dades (mai al revés).
+
+    Testing:
+
+        Unit tests al domini amb mocks del repositori.
+
+        Integration tests a la presentació usant supertest.
+
+    Validation:
+
+        Validar payload a la capa de presentació (controller) amb Zod/Joi.
+
+    Errors:
+
+        Domini llença Errors “nets”.
+
+        Controller els converteix a HTTP 4xx/5xx.
+
+    Evolució:
+
+        Noves funcionalitats ⇒ crea primer Service i Repository si cal.
+
+        Front: afegeix mètodes a esportistes.js (API wrapper + UI).
