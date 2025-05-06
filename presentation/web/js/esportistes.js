@@ -33,10 +33,8 @@ function renderTable(esportistes) {
 }
 
 function loadEsportistes() {
-    console.log("ata");
-    fetch('http://localhost:3000/esportistes')
+    fetch('http://localhost:3000/api/esportistes')
         .then(response => {
-            console.log("data");
             if (!response.ok) {
                 throw new Error('Failed to fetch esportistes');
             }

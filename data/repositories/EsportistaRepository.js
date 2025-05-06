@@ -3,7 +3,7 @@ const { getPool } = require('../db');
 
 class EsportistaRepository {
   async findAll() {
-    const [rows] = await getPool().query('SELECT * FROM esportista');
+    const [rows] = await getPool().query('SELECT * FROM esportista ORDER BY dni ASC');
     return rows;
   }
 
