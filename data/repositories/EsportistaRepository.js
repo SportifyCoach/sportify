@@ -16,22 +16,22 @@ class EsportistaRepository {
   }
 
   async create(data) {
-    const { dni, nom, cognom, email, telefon } = data;
+    const { dni, tlf, email } = data;
     await getPool().query(
-      `INSERT INTO esportista (dni, nom, cognom, email, telefon)
-       VALUES (:dni, :nom, :cognom, :email, :telefon)`,
-      { dni, nom, cognom, email, telefon },
+      `INSERT INTO esportista (dni, tlf, email)
+       VALUES (:dni, :tlf, :email)`,
+      { dni, tlf, email },
     );
     return this.findByDni(dni);
   }
 
-  async update(dni, { email, telefon }) {
+  async update(dni, { email, tlf }) {
     await getPool().query(
       `UPDATE esportista
          SET email = COALESCE(:email,email),
-             telefon = COALESCE(:telefon,telefon)
+             tlf = COALESCE(:tlf,tlf)
        WHERE dni = :dni`,
-      { dni, email, telefon },
+      { dni, email, tlf },
     );
     return this.findByDni(dni);
   }

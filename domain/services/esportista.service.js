@@ -17,8 +17,8 @@ class EsportistaService {
     return new Esportista(doc);
   }
 
-  async updateContact(dni, { email, telefon }) {
-    const upd = await repo.update(dni, { email, telefon });
+  async updateContact(dni, { tlf, email }) {
+    const upd = await repo.update(dni, { tlf, email });
     if (!upd) throw new Error('Esportista no trobat');
     return new Esportista(upd);
   }

@@ -81,7 +81,7 @@ obrirPopup.addEventListener("click", () => popupFons.style.display = "flex");
   
 tancarPopup.addEventListener("click", () => popupFons.style.display = "none");
   
-  // Tancar fent clic fora del formulari
+// Tancar fent clic fora del formulari
 window.addEventListener("click", (e) => {
     if (e.target === popupFons) popupFons.style.display = "none";
 });
@@ -107,7 +107,7 @@ registreForm.addEventListener('submit', (e) => {
     }
 */
     // Enviament de dades al servidor
-    fetch('http://localhost:3000/esportistes', {
+    fetch('http://localhost:3000/api/esportistes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -120,8 +120,6 @@ registreForm.addEventListener('submit', (e) => {
         return response.text();
     })
     .then(msg => {
-        missatge.style.color = 'green';
-        missatge.textContent = msg;
         registreForm.reset();
         popupFons.style.display = 'none';
         loadEsportistes();
@@ -149,7 +147,7 @@ function confirmDelete(dni) {
 confirmarDelete.addEventListener("click", () => {
     if (!dniAEliminar) return;
 
-    fetch(`http://localhost:3000/esportistes/${dniAEliminar}`, {
+    fetch(`http://localhost:3000/api/esportistes/${dniAEliminar}`, {
         method: 'DELETE'
     })
     .then(response => {

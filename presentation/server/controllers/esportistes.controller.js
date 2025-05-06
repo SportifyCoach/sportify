@@ -11,6 +11,7 @@ exports.getAll = async (_req, res, next) => {
 };
 
 exports.create = async (req, res, next) => {
+  console.log('[DEBUG] Body rebut:', req.body)
   try {
     const created = await service.add(req.body);
     res.status(201).json(created);
