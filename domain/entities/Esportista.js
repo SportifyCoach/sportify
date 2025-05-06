@@ -1,5 +1,5 @@
 /*--------------------------------------------------
-  Entitat de domini “pura” (independent de Mongoose)
+  Entitat de domini “pura” (independent de MySQL2)
 --------------------------------------------------*/
 class Esportista {
     constructor({ dni, nom, cognom, email, telefon }) {
