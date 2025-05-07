@@ -38,7 +38,7 @@ if opt.init:
     try:
         do_query(c, f"""
             CREATE TABLE IF NOT EXISTS `{tabname}` (
-                id INT AUTO_INCREMENT PRIMARY KEY,
+                dni VARCHAR(9) PRIMARY KEY,
                 nom VARCHAR(50) NOT NULL,
                 cognoms VARCHAR(70) NOT NULL,
                 email VARCHAR(120) NOT NULL UNIQUE,
@@ -53,7 +53,7 @@ if opt.init:
             do_query(c, f"DROP TABLE `{tabname}`;")
             do_query(c, f"""
                 CREATE TABLE `{tabname}` (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    dni VARCHAR(9) PRIMARY KEY,
                     nom VARCHAR(50) NOT NULL,
                     cognoms VARCHAR(70) NOT NULL,
                     email VARCHAR(120) NOT NULL UNIQUE,
@@ -64,52 +64,53 @@ if opt.init:
     conn.commit()
 
 elif opt.add:
-    print("Afegint entrenadors, deixa el nom en blanc per a sortir")
+    print("Afegint entrenadors, deixa el DNI en blanc per a sortir")
     while True:
-        nom = input("Nom: ")
-        if not nom:
+        dni = input("DNI: ")
+        if not dni:
             break
+        nom = input("Nom: ")
         cognoms = input("Cognoms: ")
         email = input("Email: ")
         especialitat = input("Especialitat: ")
         experiencia = input("Anys d'experiència: ")
         q = f"""
             INSERT INTO `{tabname}` 
-            (nom, cognoms, email, especialitat, experiencia) 
-            VALUES (%s, %s, %s, %s, %s);
+            (dni, nom, cognoms, email, especialitat, experiencia) 
+            VALUES (%s, %s, %s, %s, %s, %s);
         """
-        do_query(c, q, (nom, cognoms, email, especialitat, experiencia))
+        do_query(c, q, (dni, nom, cognoms, email, especialitat, experiencia))
     conn.commit()
 
 elif opt.delete:
-    print("Esborrant entrenador per ID")
-    id = input("ID de l'entrenador: ")
-    q = f"DELETE FROM `{tabname}` WHERE id = %s;"
-    do_query(c, q, (id,))
+    print("Esborrant entrenador per DNI")
+    dni = input("DNI de l'entrenador: ")
+    q = f"DELETE FROM `{tabname}` WHERE dni = %s;"
+    do_query(c, q, (dni,))
     conn.commit()
     if c.rowcount:
-        print(f"S'ha esborrat l'entrenador amb ID {id}.")
+        print(f"S'ha esborrat l'entrenador amb DNI {dni}.")
     else:
-        print(f"No s'ha trobat cap entrenador amb ID {id}.")
+        print(f"No s'ha trobat cap entrenador amb DNI {dni}.")
 
 elif opt.list:
-    print("Llistant entrenadors, deixa el ID en blanc per a mostrar tots")
-    id = input("ID de l'entrenador: ")
-    if not id:
-        do_query(c, f"SELECT id, nom, cognoms, email, especialitat, experiencia FROM `{tabname}`")
+    print("Llistant entrenadors, deixa el DNI en blanc per a mostrar tots")
+    dni = input("DNI de l'entrenador: ")
+    if not dni:
+        do_query(c, f"SELECT dni, nom, cognoms, email, especialitat, experiencia FROM `{tabname}`")
         for row in c:
-            print("ID: %d, Nom: %s, Cognoms: %s, Email: %s, Especialitat: %s, Experiència: %d" % row)
+            print("DNI: %s, Nom: %s, Cognoms: %s, Email: %s, Especialitat: %s, Experiència: %d" % row)
     else:
         q = f"""
-            SELECT id, nom, cognoms, email, especialitat, experiencia 
-            FROM `{tabname}` WHERE id = %s;
+            SELECT dni, nom, cognoms, email, especialitat, experiencia 
+            FROM `{tabname}` WHERE dni = %s;
         """
-        do_query(c, q, (id,))
+        do_query(c, q, (dni,))
         row = c.fetchone()
         if row:
-            print("ID: %d, Nom: %s, Cognoms: %s, Email: %s, Especialitat: %s, Experiència: %d" % row)
+            print("DNI: %s, Nom: %s, Cognoms: %s, Email: %s, Especialitat: %s, Experiència: %d" % row)
         else:
-            print(f"No s'ha trobat cap entrenador amb ID {id}.")
+            print(f"No s'ha trobat cap entrenador amb DNI {dni}.")
 else:
     optp.print_help()
 

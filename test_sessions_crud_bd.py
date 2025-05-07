@@ -56,8 +56,8 @@ if opt.init:
                 FOREIGN KEY (entrenador) REFERENCES entrenador(dni)
             );
         """)
-    except:
-        print("Table not created")
+    except Exception as e:
+        print("Table not created: ", e)
         y = input("Try drop table first? [y]:")
         if y == 'y':
             do_query(c, f"DROP TABLE `{tabname}`;")
