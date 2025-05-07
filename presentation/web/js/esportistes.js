@@ -104,7 +104,7 @@ registreForm.addEventListener('submit', (e) => {
     const email = document.getElementById('email').value;
 
     // Enviament de dades al servidor
-    fetch('http://localhost:3000/esportistes', {
+    fetch('http://localhost:3000/api/esportistes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ function confirmDelete(dni) {
 confirmarDelete.addEventListener("click", () => {
     if (!dniAEliminar) return;
 
-    fetch(`http://localhost:3000/esportistes/${dniAEliminar}`, {
+    fetch(`http://localhost:3000/api/esportistes/${dniAEliminar}`, {
         method: 'DELETE'
     })
     .then(response => {
