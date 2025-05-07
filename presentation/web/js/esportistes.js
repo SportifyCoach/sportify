@@ -7,6 +7,8 @@ function renderTable(esportistes) {
             <thead>
                 <tr>
                     <th>DNI</th>
+                    <th>Nom</th>
+                    <th>Cognoms</th>
                     <th>Telèfon</th>
                     <th>Email</th>
                     <th>Update</th>
@@ -20,6 +22,8 @@ function renderTable(esportistes) {
         tableHTML += `
             <tr>
                 <td>${esportista.dni}</td>
+                <td>${esportista.nom}</td>
+                <td>${esportista.cognoms}</td>
                 <td>${esportista.tlf}</td>
                 <td>${esportista.email}</td>
                 <td><button class="btn btn-primary" onclick="goToUpdate('${esportista.dni}')">Update</button></td>
@@ -81,7 +85,7 @@ obrirPopup.addEventListener("click", () => popupFons.style.display = "flex");
   
 tancarPopup.addEventListener("click", () => popupFons.style.display = "none");
   
-// Tancar fent clic fora del formulari
+  // Tancar fent clic fora del formulari
 window.addEventListener("click", (e) => {
     if (e.target === popupFons) popupFons.style.display = "none";
 });
@@ -94,32 +98,26 @@ registreForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const dni = document.getElementById('dni').value;
-    //const nom = document.getElementById('nom').value;
-    //const cognoms = document.getElementById('cognoms').value;
+    const nom = document.getElementById('nom').value;
+    const cognoms = document.getElementById('cognoms').value;
     const tlf = document.getElementById('tlf').value;
     const email = document.getElementById('email').value;
-    //const contrasenya = document.getElementById('contrasenya').value;
-    //const confirmar = document.getElementById('confirmar').value;
-/*
-    if (contrasenya !== confirmar) {
-        missatge.textContent = "Les contrasenyes no coincideixen";
-        return;
-    }
-*/
+
     // Enviament de dades al servidor
-    fetch('http://localhost:3000/api/esportistes', {
+    fetch('http://localhost:3000/esportistes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        //body: JSON.stringify({ dni, tlf, email, nom, cognoms, contrasenya }),
-        body: JSON.stringify({ dni, tlf, email}),
+        body: JSON.stringify({ dni, nom, cognoms, tlf, email}),
     })
     .then(response => {
         if (!response.ok) throw new Error('Error al afegir esportista');
         return response.text();
     })
     .then(msg => {
+        missatge.style.color = 'green';
+        missatge.textContent = msg;
         registreForm.reset();
         popupFons.style.display = 'none';
         loadEsportistes();
@@ -147,7 +145,7 @@ function confirmDelete(dni) {
 confirmarDelete.addEventListener("click", () => {
     if (!dniAEliminar) return;
 
-    fetch(`http://localhost:3000/api/esportistes/${dniAEliminar}`, {
+    fetch(`http://localhost:3000/esportistes/${dniAEliminar}`, {
         method: 'DELETE'
     })
     .then(response => {
