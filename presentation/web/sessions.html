@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="img/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+    <title>Sportify Coach Sessions</title>
+</head>
+
+<body>
+    <div class="main">
+        <div class="top-bar">
+            <div class="title">
+                <img class="logo" src="img/logo.png" alt="logo">
+                <h1>Sportify Coach</h1>
+            </div>
+            <div class="menu">
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="esportistes.html">Esportistes</a></li>
+                        <li><a href="entrenadors.html">Entrenadors</a></li>
+                        <li><a href="sessions.html"><strong>Sessions</strong></a></li>
+                        <li><a href="disciplines.html">Disciplines</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="container">
+            <h2>Sessions</h2>
+            <div class="crud">
+                <div class="crud-top">
+                    <button id="obrirPopup">Afegir Sessions</button>
+                    <input class="search-bar" id="search-bar" type="text" placeholder="Cerca sessió per id">
+                </div>
+                <div class="crud-content" id="table"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/sessions.js" defer></script>
+
+</body>
+
+</html>
