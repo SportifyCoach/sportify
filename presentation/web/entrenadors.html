@@ -30,36 +30,58 @@
                 </nav>
             </div>
         </div>
-        <h2>Alta d'entrenador</h2>
+        <h2>Entrenadors</h2>
+        <div class="container">
+            <!-- Fons fosc + Popup -->
+            <div id="popupFons" class="popup-fons">
+                <div class="popup">
+                    <span class="tancar-popup" id="tancarPopup">&times;</span>
+                    <h2>Registre d'Entrenadors</h2>
+                    <form id="registreForm">    
+                        <label>Nom: </label>
+                        <input name="nom" required />
+            
+                        <label>Cognoms: </label>
+                        <input name="cognoms" required />
+            
+                        <label>DNI: </label>
+                            <input name="dni" required />
+            
+                        <label>Correu electrònic: </label>
+                        <input type="email" name="email" required />
+            
+                        <label>Especialitat: </label>
+                        <input name="especialitat" required />
+            
+                        <label>Experiència (anys): </label>
+                        <input type="number" name="experiencia" min="0" required />
 
-        <form id="frmEntrenador" class="card p-4" style="max-width:480px">
-            <label>Nom
-            <input name="nom" required />
-            </label>
+                        <button type="submit">Enviar</button>
+                        <p id="missatge" class="error"></p>
+                    </form>
+                </div>
+            </div>
 
-            <label>Cognoms
-            <input name="cognoms" required />
-            </label>
+            <!-- Fons fosc + Popup de confirmació d'eliminació -->
+            <div id="popupFonsDelete" class="popup-fons">
+                <div class="popup">
+                    <span class="tancar-popup" id="tancarPopupDelete">&times;</span>
+                    <h2>Confirmar eliminació</h2>
+                    <p id="textConfirmacio">Estàs segur que vols eliminar aquest entrenador?</p>
+                    <button id="confirmarDelete" class="btn-danger">Sí, eliminar</button>
+                    <button id="cancelarDelete">Cancel·lar</button>
+                </div>
+            </div>
 
-            <label>Telèfon
-                <input type="number" name="tlf" required />
-            </label>
+            <div class="crud">
+                <div class="crud-top">
+                    <button id="obrirPopup">Registrar entrenador</button>
+                    <input class="search-bar" id="search-bar" type="text" placeholder="Cerca entrenador per dni">
+                </div>
+                <div class="crud-content" id="table"></div>
+            </div>
+        </div>
 
-            <label>Correu electrònic
-            <input type="email" name="email" required />
-            </label>
-
-            <label>Especialitat
-            <input name="especialitat" required />
-            </label>
-
-            <label>Experiència (anys)
-            <input type="number" name="experiencia" min="0" required />
-            </label>
-
-            <button>Enviar sol·licitud</button>
-            <p id="msg" class="mt-2"></p>
-        </form>
 
         <script src="js/entrenadors.js"></script>
         </body>

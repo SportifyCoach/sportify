@@ -1,6 +1,6 @@
 class Entrenador {
-    constructor({ id, nom, cognoms, email, especialitat, experiencia, estat }) {
-      Object.assign(this, { id, nom, cognoms, email, especialitat, experiencia, estat });
+    constructor({ dni, nom, cognoms, email, especialitat, experiencia }) {
+      Object.assign(this, { dni, nom, cognoms, email, especialitat, experiencia });
     }
   }
   module.exports = Entrenador;

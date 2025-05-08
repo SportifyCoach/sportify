@@ -3,20 +3,20 @@ const { getPool } = require('../db');
 
 class EntrenadorRepository {
   async create(e) {
-    const { nom, cognoms, email, especialitat, experiencia } = e;
+    const { dni, nom, cognoms, email, especialitat, experiencia } = e;
     const [res] = await getPool().query(
       `INSERT INTO entrenador
-         (nom, cognoms, email, especialitat, experiencia)
-       VALUES (:nom, :cognoms, :email, :especialitat, :experiencia)`,
-      { nom, cognoms, email, especialitat, experiencia }
+         (dni, nom, cognoms, email, especialitat, experiencia)
+       VALUES (:dni, :nom, :cognoms, :email, :especialitat, :experiencia)`,
+      { dni, nom, cognoms, email, especialitat, experiencia }
     );
-    return this.findById(res.insertId);
+    return this.findByDni(dni);
   }
 
-  async findById(id) {
+  async findByDni(dni) {
     const [rows] = await getPool().query(
-      `SELECT * FROM entrenador WHERE id = :id`,
-      { id }
+      `SELECT * FROM entrenador WHERE dni = :dni`,
+      { dni }
     );
     return rows[0];
   }
@@ -31,7 +31,7 @@ class EntrenadorRepository {
 
   async findAll() {
     const [rows] = await getPool().query(
-      `SELECT * FROM entrenador ORDER BY created_at DESC`
+      `SELECT * FROM entrenador ORDER BY :dni DESC`
     );
     return rows;
   }
