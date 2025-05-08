@@ -106,6 +106,13 @@ h2 {
     margin: 0;
 }
 
+.session-title {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 5px 0 5px;
+    margin-top: 20px;
+}
+
 /* BotÃ³ principal */
 #obrirPopup {
     padding: 5px;

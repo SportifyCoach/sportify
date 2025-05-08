@@ -1,57 +1,42 @@
-let allSessions = [];
-
-function renderTable(sessions) {
+function renderTable(sessions, members) {
     const table = document.getElementById('table');
+    table.innerHTML = ''; 
 
     sessions.forEach(sessio => {
+        // Filtrar els membres que coincideixen amb la sessio
+        const filteredMembers = members.filter(member => member.sessio_id === sessio.id);
+
         // Convertir la data a un format llegible
         const date = new Date(sessio.date);
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         sessio.date = date.toLocaleDateString('ca-ES', options)
 
-        const members = loadMembers(sessio.id);
-        console.log(members); 
+        sessio.disciplina = sessio.disciplina.toUpperCase();
 
         table.innerHTML += `
             <div class="session">
                 <div class="session-title">
-                    <h3> ${sessio.disciplina} - ${sessio.entrenador} </h3>
-                    <h3> ${sessio.date} </h3>
+                    <span> <strong> ${sessio.disciplina} </strong> - ${sessio.date}  </span> 
+                    <span> ${sessio.entrenador} </strong> </span>
                 </div>
                 <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Participants</th>
+                            <th>Valoració</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredMembers.map(member => `
+                            <tr>
+                                <td>${member.esportista_dni}</td>
+                                <td>${member.valoracio}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
         `;
     });
-
-    let tableHTML = `
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Data</th>
-                    <th>Límit persones</th>
-                    <th>Disciplina</th>
-                    <th>Entrenador</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-
-    sessions.forEach(sessio => {
-        tableHTML += `
-            <tr>
-                <td>${sessio.id}</td>
-                <td>${sessio.date}</td>
-                <td>${sessio.limit_persones}</td>
-                <td>${sessio.disciplina}</td>
-                <td>${sessio.entrenador}</td>
-                <td><button class="btn btn-primary" onclick="goToUpdate('')">Update //todo</button></td> 
-                <td><button class="btn btn-danger" onclick="confirmDelete('')">Delete //todo</button></td>
-            </tr>
-        `;
-    });
-
-    tableHTML += `</tbody></table>`;
-    table.innerHTML = tableHTML;
 }
 
 function loadSessions() {
@@ -63,9 +48,7 @@ function loadSessions() {
             return response.json();
         })
         .then(data => {
-            allSessions = data;
-            console.log(data);
-            renderTable(allSessions);
+            loadMembers(data);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -74,8 +57,8 @@ function loadSessions() {
         });
 }
 
-function loadMembers(id) { 
-    fetch(`http://localhost:3000/api/entrenaments/${id}/`)
+function loadMembers(sessions) { 
+    fetch(`http://localhost:3000/api/entrenaments/`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Failed to fetch members');
@@ -83,8 +66,7 @@ function loadMembers(id) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
-            return data;
+            renderTable(sessions, data);
         })
         .catch(error => {
             console.error('Error:', error);
