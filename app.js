@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const { connect } = require('./data/db');
 const esportistesRouter = require('./presentation/server/routes/esportistes.routes.js');
+const sessionsRouter = require('./presentation/server/routes/sessions.routes.js');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.static(path.join(__dirname, 'presentation', 'web')));
 
 /* ---------- Rutes API ---------- */
 app.use('/api/esportistes', esportistesRouter);
+app.use('/api/sessions', sessionsRouter);
 
 /* ---------- Gestió d'errors ---------- */
 app.use((err, _req, res, _next) => {
