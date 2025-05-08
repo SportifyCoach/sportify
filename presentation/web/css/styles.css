@@ -219,3 +219,77 @@ form button:hover {
     font-weight: bold;
     cursor: pointer;
 }
+
+/*──────────────────────────────────────────────*/
+/*  Formulari de registre d'entrenador          */
+/*──────────────────────────────────────────────*/
+
+/* Targetem només la pàgina d'alta per no trencar la resta */
+#page-entrenadors body {
+    background-color: #2b2b2b;   /* coherència amb la resta de lloc */
+}
+
+#page-entrenadors h1 {
+    font-size: 3em;
+    margin: 10px 0 25px 0;
+    text-align: center;
+}
+
+/* Card contenedor */
+#page-entrenadors form.card {
+    background: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.12);
+    border-radius: 10px;
+    margin: 0 auto;
+}
+
+/* Etiquetes + inputs apilats verticalment */
+#page-entrenadors form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    margin-top: 0.8em;
+    color: #333;
+}
+
+#page-entrenadors form input {
+    margin-top: 0.4em;
+    padding: 0.6em;
+    border: 1px solid #c8c8c8;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border 0.2s;
+}
+
+#page-entrenadors form input:focus {
+    outline: none;
+    border-color: #956ce0;
+    box-shadow: 0 0 3px rgba(149, 108, 224, 0.4);
+}
+
+/* Botó d'enviament */
+#page-entrenadors form button {
+    margin-top: 1.2em;
+    padding: 0.7em;
+    background-color: #0077cc;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background 0.25s;
+}
+
+#page-entrenadors form button:hover {
+    background-color: #005fa3;
+}
+
+/* Missatge de feedback */
+#page-entrenadors #msg {
+    font-size: 0.95em;
+    text-align: center;
+    min-height: 1.2em;   /* reserva espai i evita “salt” de layout */
+}
+
+/* Petit utilitari de marge (bootstrappish) */
+.mt-2 { margin-top: 0.5rem; }
