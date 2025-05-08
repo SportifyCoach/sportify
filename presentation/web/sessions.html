@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="img/logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+    <title>Sportify Coach</title>
+</head>
+
+<body>
+    <div class="main">
+        <div class="top-bar">
+            <div class="title">
+                <img class="logo" src="img/logo.png" alt="logo">
+                <h1>Sportify Coach</h1>
+            </div>
+            <div class="menu">
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="esportistes.html">Esportistes</a></li>
+                        <li><a href="entrenadors.html">Entrenadors</a></li>
+                        <li><a href="sessions.html"><strong>Sessions</strong></a></li>
+                        <li><a href="disciplines.html">Disciplines</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="container">
+            <!-- Fons fosc + Popup -->
+            <div id="popupFons" class="popup-fons">
+                <div class="popup">
+                    <span class="tancar-popup" id="tancarPopup">&times;</span>
+                    <h2>Registrar Sessió</h2>
+                    <form id="registreSessioForm">
+                        <label for="id">ID de la Sessió:</label>
+                        <input type="text" id="id" name="id" required>
+
+                        <label for="titol">Títol:</label>
+                        <input type="text" id="titol" name="titol" required>
+
+                        <label for="data">Data:</label>
+                        <input type="date" id="data" name="data" required>
+
+                        <label for="hora">Hora:</label>
+                        <input type="time" id="hora" name="hora" required>
+
+                        <label for="disciplina">Disciplina:</label>
+                        <input type="text" id="disciplina" name="disciplina" required>
+
+                        <button type="submit">Enviar</button>
+                        <p id="missatge" class="error"></p>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Fons fosc + Popup de confirmació d'eliminació -->
+            <div id="popupFonsDelete" class="popup-fons">
+                <div class="popup">
+                    <span class="tancar-popup" id="tancarPopupDelete">&times;</span>
+                    <h2>Confirmar eliminació</h2>
+                    <p id="textConfirmacio">Estàs segur que vols eliminar aquesta sessió?</p>
+                    <button id="confirmarDelete" class="btn-danger">Sí, eliminar</button>
+                    <button id="cancelarDelete">Cancel·lar</button>
+                </div>
+            </div>
+
+            <h2>Sessions</h2>
+            <div class="crud">
+                <div class="crud-top">
+                    <button id="obrirPopup">Registrar sessió</button>
+                    <input class="search-bar" id="search-bar" type="text" placeholder="Cerca sessió per ID">
+                    <input type="text" id="filtreDisciplina" placeholder="Filtra per disciplina">
+                    <input type="text" id="filtreEntrenador" placeholder="Filtra per entrenador">
+                    <button id="mostrarDisponibles">Mostrar només disponibles</button>
+                    <button id="mostrarTotes">Mostrar totes</button>
+
+                </div>
+                <div class="crud-content" id="table"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/sessions.js" defer></script>
+</body>
+
+</html>

@@ -4,6 +4,9 @@ const path = require('path');
 const { connect } = require('./data/db');
 const esportistesRouter = require('./presentation/server/routes/esportistes.routes.js');
 const entrenadorsRouter  = require('./presentation/server/routes/entrenadors.routes.js');
+const sessionsRouter = require('./presentation/server/routes/sessions.routes.js');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 const app = express();
 
@@ -15,6 +18,7 @@ app.use(express.static(path.join(__dirname, 'presentation', 'web')));
 /* ---------- Rutes API ---------- */
 app.use('/api/esportistes', esportistesRouter);
 app.use('/api/entrenadors', entrenadorsRouter);
+app.use('/api/sessions', sessionsRouter);
 
 /* ---------- Gestió d'errors ---------- */
 app.use((err, _req, res, _next) => {
@@ -27,5 +31,8 @@ connect().catch(e => {
   console.error('Error connectant DB', e);
   process.exit(1);
 });
+
+//swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 module.exports = app;
