@@ -12,3 +12,10 @@ exports.getAll = async (_req, res, next) => {
     res.json(await service.list());
   } catch (e) { next(e); }
 };
+
+exports.remove = async (req, res, next) => {
+  try {
+    await service.remove(req.params.dni);
+    res.status(204).end();
+  } catch (e) { next(e); }
+};

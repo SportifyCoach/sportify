@@ -31,10 +31,20 @@ class EntrenadorRepository {
 
   async findAll() {
     const [rows] = await getPool().query(
-      `SELECT * FROM entrenador ORDER BY :dni DESC`
+      `SELECT * FROM entrenador ORDER BY dni DESC`
     );
     return rows;
   }
+
+  async delete(dni) {
+    if (!dni) throw new Error('DNI requerit');
+    const [res] = await getPool().query(
+      'DELETE FROM entrenador WHERE dni = :dni',
+      { dni }
+    );
+    return res.affectedRows;
+  }
+
 }
 
 module.exports = new EntrenadorRepository();
