@@ -41,16 +41,12 @@ function renderTable(llista) {
             <td>${e.email}</td>
             <td>${e.especialitat}</td>
             <td>${e.experiencia}</td>
-            <td>
-              <button class="btn-danger" data-dni="${e.dni}">DELETE</button>
+            <td><button class="btn-danger" onclick="confirmDeleteEntrenador('${e.dni}')">DELETE</button>
             </td>
           </tr>`).join('')}
       </tbody>
     </table>`;
 
-  /* Enllacem botons eliminar */
-  taulaContainer.querySelectorAll('button[data-dni]')
-    .forEach(btn => btn.addEventListener('click', () => confirmDelete(btn.dataset.dni)));
 }
 
 async function loadEntrenadors() {
@@ -104,30 +100,51 @@ registreForm.addEventListener('submit', async e => {
 });
 
 /* ---------- Eliminar ---------- */
-function confirmDelete(dni) {
-  dniAEliminar = dni;
-  textConfirmacio.textContent = `Estàs segur que vols eliminar l'entrenador amb DNI ${dni}?`;
+let dniEntrenadorEliminar = null;
+
+function confirmDeleteEntrenador(dni) {
+  dniEntrenadorEliminar = dni;
+  textConfirmacio.textContent =
+    `Estàs segur que vols eliminar l'entrenador amb DNI ${dni}?`;
   popupFonsDelete.style.display = 'flex';
 }
 
-tancarPopupDelete.addEventListener('click', () => popupFonsDelete.style.display = 'none');
-cancelarDelete.addEventListener('click', () => popupFonsDelete.style.display = 'none');
-window.addEventListener('click', e => { if (e.target === popupFonsDelete) popupFonsDelete.style.display = 'none'; });
+confirmarDelete.addEventListener('click', () => {
+  if (!dniEntrenadorEliminar) return;
 
-confirmarDelete.addEventListener('click', async () => {
-  if (!dniAEliminar) return;
-  try {
-    const res = await fetch(`${API}/${dniAEliminar}`, { method: 'DELETE' });
-    if (!res.ok) throw new Error('No s\'ha pogut eliminar l\'entrenador');
+  fetch(`${API}/${dniEntrenadorEliminar}`, { method: 'DELETE' })
+    .then(res => {
+      if (!res.ok) throw new Error("No s'ha pogut eliminar l'entrenador");
+    })
+    .then(() => {
+      popupFonsDelete.style.display = 'none';
+      dniEntrenadorEliminar = null;
+      loadEntrenadors();                 // refresca la taula
+    })
+    .catch(err => {
+      alert(err.message);
+      popupFonsDelete.style.display = 'none';
+      dniEntrenadorEliminar = null;
+    });
+});
+
+cancelarDelete.addEventListener('click', () => {
+  popupFonsDelete.style.display = 'none';
+  dniEntrenadorEliminar = null;
+});
+
+tancarPopupDelete.addEventListener('click', () => {
+  popupFonsDelete.style.display = 'none';
+  dniEntrenadorEliminar = null;
+});
+
+window.addEventListener('click', e => {
+  if (e.target === popupFonsDelete) {
     popupFonsDelete.style.display = 'none';
-    dniAEliminar = null;
-    await loadEntrenadors();
-  } catch (err) {
-    alert(err.message);
-    popupFonsDelete.style.display = 'none';
-    dniAEliminar = null;
+    dniEntrenadorEliminar = null;
   }
 });
+
 
 /* ---------- Init ---------- */
 document.addEventListener('DOMContentLoaded', loadEntrenadors);
