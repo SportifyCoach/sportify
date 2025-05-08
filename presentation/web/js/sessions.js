@@ -2,6 +2,26 @@ let allSessions = [];
 
 function renderTable(sessions) {
     const table = document.getElementById('table');
+
+    sessions.forEach(sessio => {
+        // Convertir la data a un format llegible
+        const date = new Date(sessio.date);
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        sessio.date = date.toLocaleDateString('ca-ES', options)
+
+        const members = loadMembers(sessio.id);
+        console.log(members); 
+
+        table.innerHTML += `
+            <div class="session">
+                <div class="session-title">
+                    <h3> ${sessio.disciplina} - ${sessio.entrenador} </h3>
+                    <h3> ${sessio.date} </h3>
+                </div>
+                <table class="table">
+        `;
+    });
+
     let tableHTML = `
         <table class="table">
             <thead>
@@ -51,6 +71,25 @@ function loadSessions() {
             console.error('Error:', error);
             document.getElementById('table').innerHTML =
                 `<p class="text-danger">Error al carregar les sessions.</p>`;
+        });
+}
+
+function loadMembers(id) { 
+    fetch(`http://localhost:3000/api/entrenaments/${id}/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch members');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('table').innerHTML =
+                `<p class="text-danger">Error al carregar els membres.</p>`;
         });
 }
 

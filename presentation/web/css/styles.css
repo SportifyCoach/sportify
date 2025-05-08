@@ -89,8 +89,21 @@ h2 {
     margin: 10px 0;
 }
 
+.vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin: 0;
+}
+
+.add-btn {
+    max-width: fit-content;
+}
+
 .search-bar {
     width: 300px;
+    height: 25px;
+    margin: 0;
 }
 
 /* BotÃ³ principal */
