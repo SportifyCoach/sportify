@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dniInput = document.getElementById('dni');
   
     // Cargar datos actuales
-    fetch(`http://localhost:3000/esportistes`)
+    fetch(`http://localhost:3000/api/esportistes`)
       .then(res => res.json())
       .then(data => {
         const esportista = data.find(e => e.dni === dni);
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tlf: tlfInput.value
       };
   
-      fetch(`http://localhost:3000/esportistes/${dni}`, {
+      fetch(`http://localhost:3000/api/esportistes/${dni}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData)
