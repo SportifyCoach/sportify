@@ -36,3 +36,16 @@ exports.remove = async (req, res, next) => {
     res.status(204).end();
   } catch (e) { next(e); }
 };
+
+exports.getAvailableSessions = async (req, res, next) => {
+  try {
+    const filters = {
+      disciplina: req.query.disciplina,
+      entrenador: req.query.entrenador,
+      date: req.query.date,
+    };
+
+    const sessions = await service.getAvailable(filters);
+    res.json(sessions);
+  } catch (e) { next(e); }
+};

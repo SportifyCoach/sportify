@@ -4,6 +4,8 @@ const path = require('path');
 const { connect } = require('./data/db');
 const esportistesRouter = require('./presentation/server/routes/esportistes.routes.js');
 const sessionsRouter = require('./presentation/server/routes/sessions.routes.js');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 const app = express();
 
@@ -27,5 +29,8 @@ connect().catch(e => {
   console.error('Error connectant DB', e);
   process.exit(1);
 });
+
+//swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 module.exports = app;

@@ -56,6 +56,36 @@ function loadSessions() {
         });
 }
 
+function loadAvailableSessions() {
+    const disciplina = document.getElementById('filtreDisciplina').value;
+    const entrenador = document.getElementById('filtreEntrenador').value;
+
+    let url = 'http://localhost:3000/api/sessions/disponibles';
+    const params = new URLSearchParams();
+
+    if (disciplina) params.append('disciplina', disciplina);
+    if (entrenador) params.append('entrenador', entrenador);
+
+    if (params.toString()) {
+        url += '?' + params.toString();
+    }
+
+    fetch(url)
+        .then(res => {
+            if (!res.ok) throw new Error('Error carregant sessions disponibles');
+            return res.json();
+        })
+        .then(data => {
+            allSessions = data;
+            renderTable(data);
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            document.getElementById('table').innerHTML =
+                `<p class="text-danger">Error al carregar les sessions disponibles.</p>`;
+        });
+}
+
 //todo tot cap abaix!!
 
 
@@ -78,6 +108,9 @@ function setupSearch() {
 document.addEventListener('DOMContentLoaded', () => {
     loadSessions();
     //setupSearch();
+    // Botons de filtratge
+    document.getElementById('mostrarDisponibles').addEventListener('click', loadAvailableSessions);
+    document.getElementById('mostrarTotes').addEventListener('click', loadSessions);
 });
 
 const obrirPopup = document.getElementById("obrirPopup");

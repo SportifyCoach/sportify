@@ -28,6 +28,11 @@ class SessioService {
     const ok = await repo.delete(dni);
     if (ok.deletedCount === 0) throw new Error('Esportista no trobat');
   }
+
+  async getAvailable(filters) {
+    const docs = await repo.findAvailable(filters);
+    return docs.map(d => new Sessio(d));
+  }
 }
 
 module.exports = new SessioService();
