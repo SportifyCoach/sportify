@@ -11,6 +11,8 @@ function renderTable(sessions) {
                     <th>Límit persones</th>
                     <th>Disciplina</th>
                     <th>Entrenador</th>
+                    <th>Update</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,12 +56,14 @@ function loadSessions() {
         });
 }
 
-//todo
+//todo tot cap abaix!!
+
+
 function goToUpdate(dni) {
     window.location.href = `update.html?dni=${dni}`;
   }
 
-//todo
+
 function setupSearch() {
     const searchInput = document.getElementById('search-bar');
     searchInput.addEventListener('input', () => {
