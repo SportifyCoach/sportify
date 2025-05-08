@@ -42,7 +42,7 @@ function renderTable(llista) {
             <td>${e.especialitat}</td>
             <td>${e.experiencia}</td>
             <td>
-              <button class="btn-danger" data-dni="${e.dni}">🗑️</button>
+              <button class="btn-danger" data-dni="${e.dni}">DELETE</button>
             </td>
           </tr>`).join('')}
       </tbody>
