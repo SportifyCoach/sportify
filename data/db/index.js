@@ -25,3 +25,4 @@ function getPool() {
 }
 
 module.exports = { connect, getPool };
+
