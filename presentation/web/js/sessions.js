@@ -19,8 +19,6 @@ function renderTable(sessions, members) {
     // Filtrar els membres que coincideixen amb la sessio
     const filteredMembers = members.filter(member => member.sessio_id === sessio.id);
 
-    const valoracioEntrenador = loadValoracionsEntrenador(sessio.entrenador);
-
     // Convertir la data a un format llegible
     const date = new Date(sessio.date);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -32,7 +30,7 @@ function renderTable(sessions, members) {
           <div class="session">
               <div class="session-title">
                   <span> <strong> ${sessio.disciplina} </strong> - ${sessio.date}  </span> 
-                  <span> <strong> Entrenador: </strong> ${sessio.entrenador} </strong> </span>
+                  <span> <strong> Entrenador: </strong> ${sessio.entrenador} <strong>Val mitja: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
               </div>
               <table class="table">
                   <thead>
@@ -91,6 +89,20 @@ function loadMembers(sessions) {
       }
       return response.json();
     })
+    .then(members => {
+      // Per cada sessió, obtenir la valoració de forma paral·lela
+      const valoracionsPromises = sessions.map(sessio =>
+        loadValoracionsEntrenador(sessio.entrenador)
+          .then(valoracio => {
+            sessio.valMitja = valoracio;
+          })
+      );
+
+      // Quan totes les valoracions estiguin carregades
+      Promise.all(valoracionsPromises).then(() => {
+        renderTable(sessions, members);
+      });
+    })
     .then(data => {
       renderTable(sessions, data);
     })
@@ -131,22 +143,24 @@ function loadAvailableSessions() {
     });
 }
 
-function loadValoracionsEntrenador(dni) {
+async function loadValoracionsEntrenador(dni) {
   let url = `http://localhost:3000/api/sessions/valoracions/entrenador/${dni}`;
-  fetch(url)
-    .then(res => {
-      if (!res.ok) throw new Error('Error carregant les valoracions mitjes');
-      return res.json();
-    })
-    .then(data => {
-      console.log("aaaaaaaaaa");
-      console.log(data);
-    })
-    .catch(err => {
-      console.error('Error:', err);
-      document.getElementById('table').innerHTML =
-        `<p class="text-danger">Error al carregar la valoracio mitja de l'entrenador.</p>`;
-    })
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Error carregant les valoracions mitjanes');
+
+    const data = await res.json();
+
+    if (data.length === 0) return 0;
+
+    const total = data.reduce((sum, val) => sum + val, 0);
+    const mitjana = total / data.length;
+
+    return mitjana;
+  } catch (err) {
+    console.error('Error:', err);
+    return null; // o -1 si vols indicar error
+  }
 }
 
 
