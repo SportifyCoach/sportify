@@ -87,6 +87,19 @@ class SessioRepository {
     const [rows] = await getPool().query(query, params);
     return rows;
   }
+
+  async updateLimit(id, newLimit) {
+    const [res] = await getPool().query(
+      `UPDATE sessio
+         SET limit_persones = :newLimit
+       WHERE id = :id`,
+      { newLimit, id }
+    );
+    return res.affectedRows;
+  }
+
 }
+
+
 
 module.exports = new SessioRepository();

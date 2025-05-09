@@ -12,128 +12,99 @@ const popupFonsSessio = document.getElementById("popupFonsSessio");
 const tancarPopupSessio = document.getElementById("tancarPopupSessio");
 
 
-<<<<<<< Updated upstream
 function renderTable(sessions) {
-    const table = document.getElementById('table');
-    let tableHTML = `
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Data</th>
-                    <th>Límit persones</th>
-                    <th>Disciplina</th>
-                    <th>Entrenador</th>
-                    <th>Inscripció</th>
-                    <th>Inscrits</th>
-                    <th>Update</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-
-    sessions.forEach(sessio => {
-        tableHTML += `
-            <tr>
-                <td>${sessio.id}</td>
-                <td>${sessio.date}</td>
-                <td>${sessio.limit_persones}</td>
-                <td>${sessio.disciplina}</td>
-                <td>${sessio.entrenador}</td>
-                <td><button class="btn btn-success" onclick="mostrarInscripcio(${sessio.id})">Inscriure's</button></td>
-                <td><button class="btn" onclick="mostrarInscrits(${sessio.id})">Veure</button></td>
-                <td><button class="btn btn-primary" onclick="goToUpdate('')">Update //todo</button></td> 
-                <td><button class="btn btn-danger" onclick="confirmDelete(${sessio.id})">Delete</button></td>
-            </tr>
-        `;
-    });
-
-    tableHTML += `</tbody></table>`;
-    table.innerHTML = tableHTML;
-=======
-  if (!sessions.length) {
-    table.innerHTML = '<p>No hi ha sessions.</p>';
-    return;
-  }
+  const table = document.getElementById('table');
+  let tableHTML = `
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Data</th>
+          <th>Límit persones</th>
+          <th>Disciplina</th>
+          <th>Entrenador</th>
+          <th>Inscripció</th>
+          <th>Inscrits</th>
+          <th>Update</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
 
   sessions.forEach(sessio => {
-    const filteredMembers = members.filter(m => m.sessio_id === sessio.id);
-    const inscrits = filteredMembers.length;
-    const oldLimit = sessio.limit_persones;
+    // comptem inscrits si cal validar mínim
+    const inscrits = sessio.inscrits_count || 0; 
 
-    const dateObj    = new Date(sessio.date);
-    const dataFmt    = dateObj.toLocaleDateString('ca-ES', { year:'numeric', month:'2-digit', day:'2-digit' });
-    const disciplina = sessio.disciplina.toUpperCase();
+    tableHTML += `
+      <tr>
+        <td>${sessio.id}</td>
+        <td>${sessio.date}</td>
 
-    table.innerHTML += `
-      <div class="session">
-        <div class="session-title">
-          <span><strong>${disciplina}</strong> – ${dataFmt}</span>
-          <span><strong>Entrenador:</strong> ${sessio.entrenador}</span>
-        </div>
-        <table class="table">
-          <thead><tr><th>Participants</th><th>Valoració</th></tr></thead>
-          <tbody>
-            ${filteredMembers.map(m => `
-              <tr>
-                <td>${m.esportista_dni}</td>
-                <td>${m.valoracio||'-'}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-        <div class="session-footer">
-          <div class="session-footer-row">
-            <button
-              class="btn btn-success small"
-              onclick="mostrarInscripcio(${sessio.id})"
-            >
-              Afegir Participants ${inscrits}/${oldLimit}
-            </button>
-            ${dateObj.getTime() >= new Date().setHours(0,0,0,0)
-              ? `<button
-                 class="btn btn-primary small"
-                 onclick="goToUpdate(${sessio.id})"
-               >Editar Sessió</button>` : ''}
-          </div>
-          <div class="session-footer-row">
-            <button
-              class="btn btn-danger small"
-              onclick="confirmDelete(${sessio.id})"
-            >Eliminar Sessió</button>
-            <!-- Nou botó per modificar límit -->
-            <button
-              class="btn btn-warning small"
-              onclick="modifyLimit(${sessio.id}, ${inscrits}, ${oldLimit})"
-            >Modificar límit</button>
-          </div>
-        </div>
-      </div>
+        <!-- Input + botó per editar límit -->
+        <td>
+          <input
+            type="number"
+            id="limit-${sessio.id}"
+            value="${sessio.limit_persones}"
+            min="${inscrits}"
+            style="width:60px;"
+          />
+          <button
+            class="btn btn-sm btn-primary"
+            onclick="updateLimit(${sessio.id}, ${inscrits})"
+          >
+            Desa
+          </button>
+        </td>
+
+        <td>${sessio.disciplina}</td>
+        <td>${sessio.entrenador}</td>
+        <td>
+          <button
+            class="btn btn-success"
+            onclick="mostrarInscripcio(${sessio.id})"
+          >Inscriure's</button>
+        </td>
+        <td>
+          <button
+            class="btn"
+            onclick="mostrarInscrits(${sessio.id})"
+          >Veure</button>
+        </td>
+        <td>
+          <button
+            class="btn btn-primary"
+            onclick="goToUpdate(${sessio.id})"
+          >Update</button>
+        </td>
+        <td>
+          <button
+            class="btn btn-danger"
+            onclick="confirmDelete(${sessio.id})"
+          >Delete</button>
+        </td>
+      </tr>
     `;
   });
->>>>>>> Stashed changes
+
+  tableHTML += `
+      </tbody>
+    </table>
+  `;
+  table.innerHTML = tableHTML;
 }
-
 /**
- * Mostra un prompt per introduir nouLimit i crida al backend
- * @param {number} id           - ID de la sessió
- * @param {number} inscrits     - número actual d'inscrits
- * @param {number} oldLimit     - límit actual
+ * Llegeix el valor de l'input i fa PUT a /api/sessions/:id/limit
+ * @param {number} id       - ID de la sessió
+ * @param {number} inscrits - número actual d'inscrits (limit ≥ inscrits)
  */
-function modifyLimit(id, inscrits, oldLimit) {
-  const nouStr = prompt(
-    `Sessió ID ${id}\n` +
-    `Inscrits actuals: ${inscrits}\n` +
-    `Límit actual: ${oldLimit}\n` +
-    `Introdueix el nou límit:`
-  );
-  if (nouStr === null) return; // l’usuari ha cancel·lat
+function updateLimit(id, inscrits) {
+  const input = document.getElementById(`limit-${id}`);
+  const nouLimit = parseInt(input.value, 10);
 
-  const nouLimit = parseInt(nouStr, 10);
   if (isNaN(nouLimit) || nouLimit < inscrits) {
-    alert('El nou límit ha de ser un nombre sencer ≥ número d’inscrits.');
-    return;
+    return alert(`El límit ha de ser un nombre ≥ ${inscrits}.`);
   }
 
   fetch(`http://localhost:3000/api/sessions/${id}/limit`, {
@@ -141,31 +112,32 @@ function modifyLimit(id, inscrits, oldLimit) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ newLimit: nouLimit })
   })
-  .then(res => {
+  .then(async res => {
+    // Llegim la resposta com JSON, si hi ha error ho processem
+    const payload = await res.json().catch(() => null);
     if (!res.ok) {
-      return res.json()
-        .then(err => { throw new Error(err.error || 'Error actualitzant límit'); });
+      throw new Error(payload?.error || res.statusText);
     }
-    return res.json();
+    return payload;
   })
-  .then(() => {
-    // Refresca les dades de sessions+inscripcions
-    if (typeof loadData === 'function') {
-      loadData();
-    } else {
-      // si no tens loadData(), fes:
-      loadSessions(); 
-      // loadMembers cridarà renderTable de nou
+  .then(updatedSessio => {
+    // Suposem que el backend retorna l'objecte sessio amb limit_persones
+    if (updatedSessio?.limit_persones != null) {
+      input.value = updatedSessio.limit_persones;
     }
+    alert('Límit de participants actualitzat!');
   })
   .catch(err => {
-    alert(`No s'ha pogut actualitzar el límit: ${err.message}`);
+    alert(`Error actualitzant límit: ${err.message}`);
+    // reassignem el valor antic, perquè no quedi 0 si falla
+    input.value = inscrits;
   });
 }
 
 
+
+
 function loadSessions() {
-<<<<<<< Updated upstream
     fetch('http://localhost:3000/api/sessions')
         .then(response => {
             if (!response.ok) {
@@ -183,44 +155,6 @@ function loadSessions() {
             document.getElementById('table').innerHTML =
                 `<p class="text-danger">Error al carregar les sessions.</p>`;
         });
-=======
-  fetch('http://localhost:3000/api/sessions')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch sessions');
-      }
-      return response.json();
-    })
-    .then(data => {
-      loadMembers(data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      document.getElementById('table').innerHTML =
-        `<p class="text-danger">Error al carregar les sessions.</p>`;
-    });
-}
-
-function loadMembers(sessions) {
-  fetch('http://localhost:3000/api/inscripcions')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('No s’han pogut carregar els membres');
-      }
-      return response.json();
-    })
-    .then(members => {
-      // Desa sessions i membres globals i aplica filtres
-      allSessions = sessions;
-      allMembers  = members;
-      applyFilters(); // o bé renderTable(sessions, members) si no fas filtres
-    })
-    .catch(error => {
-      console.error('Error carregant membres:', error);
-      document.getElementById('table').innerHTML =
-        `<p class="text-danger">Error al carregar els membres.</p>`;
-    });
->>>>>>> Stashed changes
 }
 
 

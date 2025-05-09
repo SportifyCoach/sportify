@@ -97,7 +97,9 @@ router.get('/disponibles', ctrl.getAvailableSessions);
  */
 router.delete('/:id', ctrl.remove);
 
-//router.put('/:dni', ctrl.update); // todo update
-//router.delete('/:dni', ctrl.remove); // todo delete
+//router.put('/:dni', ctrl.update); 
+//router.delete('/:dni', ctrl.remove); 
+router.put('/:id',        ctrl.update);        
+router.put('/:id/limit',  ctrl.updateLimit);   
 
 module.exports = router;
