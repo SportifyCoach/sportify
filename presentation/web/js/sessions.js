@@ -17,7 +17,7 @@ function renderTable(sessions, members) {
             <div class="session">
                 <div class="session-title">
                     <span> <strong> ${sessio.disciplina} </strong> - ${sessio.date}  </span> 
-                    <span> ${sessio.entrenador} </strong> </span>
+                    <span> <strong> Entrenador: </strong> ${sessio.entrenador} </strong> </span>
                 </div>
                 <table class="table">
                     <thead>
@@ -35,6 +35,17 @@ function renderTable(sessions, members) {
                         `).join('')}
                     </tbody>
                 </table>
+                <div class="session-footer">
+                    <div class="session-footer-row">
+                        <span> <strong> &nbsp;Plaçes disponibles: </strong> ${sessio.limit_persones-filteredMembers.length}/${sessio.limit_persones} </span>
+                        <button id="edit-sessio-${sessio.id}" class="btn btn-primary small">Editar Sessió</button>
+                    </div>
+                    <div class="session-footer-row">
+                        <button id="add-member-${sessio.id}" class="btn btn-success small">Afegir Participants</button> 
+                        <button id="del-member-${sessio.id}" class="btn btn-danger small">Eliminar Participants</button>
+                    </div>
+                </div>
+            </div>
         `;
     });
 }

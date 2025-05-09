@@ -106,11 +106,30 @@ h2 {
     margin: 0;
 }
 
+.session {
+    border: 1px solid #2b2b2b71;
+    border-radius: 3px;
+    margin: 20px 0;
+    padding: 15px 10px;
+}
+
 .session-title {
     display: flex;
     justify-content: space-between;
-    padding: 20px 5px 0 5px;
-    margin-top: 20px;
+}
+
+.session-footer {
+    padding: 10px 3px 0 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.session-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 /* BotÃ³ principal */
@@ -202,31 +221,41 @@ form button:hover {
 }
 
 .btn-primary {
-    background-color: #75aaff;
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.6em;
+    margin-bottom: 1em;background-color: #75aaff;
     color: white;
     border: none;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 .btn-primary:hover {
     background-color: #417fdd;
 }
 
-.btn-danger {
-    background-color: #f15a4f;
+.btn-success {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.6em;
+    margin-bottom: 1em;background-color: #1dcc25;
     color: white;
     border: none;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.btn-danger:hover {
-    background-color: #ca3e36;
+.btn-success:hover {
+    background-color: #19af20;
 }
 
-.error {
-    color: red;
-    text-align: center;
-}
-
-/* BotÃ³ eliminar (vermell) */
 .btn-danger {
     width: 100%;
     padding: 0.5em;
@@ -238,4 +267,18 @@ form button:hover {
     border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
+}
+
+.btn-danger:hover {
+    background-color: #ca3e36;
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+.small {
+    max-width: 200px;
+    margin: 0;
 }
