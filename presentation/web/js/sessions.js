@@ -23,6 +23,7 @@ function renderTable(sessions) {
                     <th>Límit persones</th>
                     <th>Disciplina</th>
                     <th>Entrenador</th>
+                    <th>Inscripció</th>
                     <th>Update</th>
                     <th>Delete</th>
                 </tr>
@@ -38,6 +39,7 @@ function renderTable(sessions) {
                 <td>${sessio.limit_persones}</td>
                 <td>${sessio.disciplina}</td>
                 <td>${sessio.entrenador}</td>
+                <td><button class="btn btn-success" onclick="mostrarInscripcio(${sessio.id})">Inscriure's</button></td>
                 <td><button class="btn btn-primary" onclick="goToUpdate('')">Update //todo</button></td> 
                 <td><button class="btn btn-danger" onclick="confirmDelete(${sessio.id})">Delete</button></td>
             </tr>
@@ -183,4 +185,45 @@ window.addEventListener("click", (e) => {
         popupFonsDeleteSessio.style.display = "none";
         sessioAEliminar = null;
     }
+});
+
+let sessioAInscriure = null;
+
+function mostrarInscripcio(sessioId) {
+  sessioAInscriure = sessioId;
+  document.getElementById('textSessioInscripcio').textContent = `Inscripció a la sessió ID ${sessioId}`;
+  document.getElementById('dniInscripcio').value = '';
+  document.getElementById('missatgeInscripcio').textContent = '';
+  document.getElementById('popupInscripcio').style.display = 'flex';
+}
+
+document.getElementById('tancarPopupInscripcio').addEventListener('click', () => {
+  document.getElementById('popupInscripcio').style.display = 'none';
+});
+
+document.getElementById('confirmarInscripcio').addEventListener('click', () => {
+  const dni = document.getElementById('dniInscripcio').value;
+  const missatge = document.getElementById('missatgeInscripcio');
+
+  fetch('http://localhost:3000/api/inscripcions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ esportista_dni: dni, sessio_id: sessioAInscriure }),
+  })
+    .then(res => {
+      if (!res.ok) return res.json().then(err => { throw new Error(err.error) });
+      return res.text();
+    })
+    .then(() => {
+      missatge.style.color = 'green';
+      missatge.textContent = 'Inscripció correcta!';
+      setTimeout(() => {
+        document.getElementById('popupInscripcio').style.display = 'none';
+        loadSessions(); // refresca
+      }, 1500);
+    })
+    .catch(err => {
+      missatge.style.color = 'red';
+      missatge.textContent = err.message;
+    });
 });
