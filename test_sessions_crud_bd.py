@@ -52,8 +52,12 @@ if opt.init:
                 limit_persones INT,
                 disciplina VARCHAR(255),
                 entrenador VARCHAR(9),
-                FOREIGN KEY (disciplina) REFERENCES disciplina(nom),
+                FOREIGN KEY (disciplina) REFERENCES disciplina(nom)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE,
                 FOREIGN KEY (entrenador) REFERENCES entrenador(dni)
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE
             );
         """)
     except Exception as e:
@@ -69,7 +73,11 @@ if opt.init:
                     disciplina VARCHAR(255),
                     entrenador VARCHAR(9),
                     FOREIGN KEY (disciplina) REFERENCES disciplina(nom),
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE,
                     FOREIGN KEY (entrenador) REFERENCES entrenador(dni)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE
                 );
             """)
     conn.commit()

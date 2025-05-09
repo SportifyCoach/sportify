@@ -27,18 +27,19 @@ class SessioRepository {
   }
 
 
-  //todo el update
-  async update(dni, { email, tlf }) {
+  
+  async update(id, { limit_persones, disciplina, date, entrenador }) {
     await getPool().query(
-      `UPDATE esportista
-         SET email = COALESCE(:email,email),
-             tlf = COALESCE(:tlf,tlf)
-       WHERE dni = :dni`,
-      { dni, email, tlf },
+      `UPDATE sessio
+         SET limit_persones = COALESCE(:limit_persones,limit_persones),
+             disciplina = COALESCE(:disciplina,disciplina),
+             date = COALESCE(:date,date),
+             entrenador = COALESCE(:entrenador,entrenador)
+       WHERE id = :id`,
+      { id, limit_persones, disciplina, date, entrenador },
     );
-    return this.findByDni(dni);
+    return this.findById(id);
   }
-
 
   async delete(id) {
     const conn = getPool();

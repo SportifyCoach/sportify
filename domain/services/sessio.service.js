@@ -15,13 +15,11 @@ class SessioService {
     return new Sessio(doc);
   }
   
-  //todo update
-  async updateContact(dni, { tlf, email }) {
-    const upd = await repo.update(dni, { tlf, email });
-    if (!upd) throw new Error('Esportista no trobat');
-    return new Esportista(upd);
+  async updateContact(id, { limit_persones, disciplina, date, entrenador }) {
+    const upd = await repo.update(id, { limit_persones, disciplina, date, entrenador });
+    if (!upd) throw new Error('Sessio no trobada');
+    return new Sessio(upd);
   }
-
 
   async remove(id) {
     const result = await repo.delete(id);

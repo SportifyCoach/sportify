@@ -35,6 +35,17 @@ class EntrenadorRepository {
     return rows;
   }
 
+  async update(dni, { especialitat, experiencia }) {
+    await getPool().query(
+      `UPDATE entrenador
+         SET especialitat = COALESCE(:especialitat,especialitat),
+             experiencia = COALESCE(:experiencia,experiencia)
+       WHERE dni = :dni`,
+      { dni, especialitat, experiencia },
+    );
+    return this.findByDni(dni);
+  }
+
   async delete(dni) {
     if (!dni) throw new Error('DNI requerit');
     const [res] = await getPool().query(

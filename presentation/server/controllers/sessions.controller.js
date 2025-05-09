@@ -18,15 +18,13 @@ exports.create = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
-//todo update
 exports.update = async (req, res, next) => {
   try {
-    const { dni } = req.params;
-    const updated = await service.updateContact(dni, req.body);
+    const { id } = req.params;
+    const updated = await service.updateContact(id, req.body);
     res.json(updated);
   } catch (e) { next(e); }
 };
-
 
 exports.remove = async (req, res, next) => {
   try {

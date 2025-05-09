@@ -8,7 +8,7 @@ function renderTable(esportistes) {
                 <tr>
                     <th>DNI</th>
                     <th>Nom</th>
-                    <th>Cognoms</th>
+                    <th>Cognom</th>
                     <th>Telèfon</th>
                     <th>Email</th>
                     <th>Update</th>
@@ -23,7 +23,7 @@ function renderTable(esportistes) {
             <tr>
                 <td>${esportista.dni}</td>
                 <td>${esportista.nom}</td>
-                <td>${esportista.cognoms}</td>
+                <td>${esportista.cognom}</td>
                 <td>${esportista.tlf}</td>
                 <td>${esportista.email}</td>
                 <td><button class="btn btn-primary" onclick="goToUpdate('${esportista.dni}')">Update</button></td>
@@ -46,7 +46,6 @@ function loadEsportistes() {
         })
         .then(data => {
             allEsportistes = data;
-            console.log(data);
             renderTable(allEsportistes);
         })
         .catch(error => {
@@ -57,7 +56,7 @@ function loadEsportistes() {
 }
 
 function goToUpdate(dni) {
-    window.location.href = `update.html?dni=${dni}`;
+    window.location.href = `updateEsportista.html?dni=${dni}`;
   }
 
 function setupSearch() {
