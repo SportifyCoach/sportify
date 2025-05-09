@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = new URLSearchParams(window.location.search).get('id');
     const limit_personesInput = document.getElementById('limit_persones');
     const disciplinaInput = document.getElementById('disciplina');
+    const dateInput = document.getElementById('date');
+    const entrenadorInput = document.getElementById('entrenador');
     const idInput = document.getElementById('id');
   
     // Cargar datos actuales
@@ -15,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sessio) {
           idInput.value = sessio.id;
           limit_personesInput.value = sessio.limit_persones;
+          dateInput.value = sessio.date;
+          entrenadorInput.value = sessio.entrenador;
           disciplinaInput.value = sessio.disciplina;
         }
       });
@@ -26,7 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
   
       const updatedData = {
         limit_persones: limit_personesInput.value,
-        disciplina: disciplinaInput.value
+        disciplina: disciplinaInput.value,
+        date: dateInput.value,
+        entrenador: entrenadorInput.value
       };
   
       fetch(`http://localhost:3000/api/sessions/${id}`, {
