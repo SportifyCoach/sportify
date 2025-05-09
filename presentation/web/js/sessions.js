@@ -63,6 +63,150 @@ function renderTable(sessions, members) {
   });
 }
 
+function renderTable(sessions) {
+  const table = document.getElementById('table');
+  let tableHTML = `
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Data</th>
+          <th>Límit persones</th>
+          <th>Disciplina</th>
+          <th>Entrenador</th>
+          <th>Inscripció</th>
+          <th>Inscrits</th>
+          <th>Update</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  sessions.forEach(sessio => {
+    // comptem inscrits si cal validar mínim
+    const inscrits = sessio.inscrits_count || 0; 
+
+    tableHTML += `
+      <tr>
+        <td>${sessio.id}</td>
+        <td>${sessio.date}</td>
+
+        <!-- Input + botó per editar límit -->
+        <td>
+          <input
+            type="number"
+            id="limit-${sessio.id}"
+            value="${sessio.limit_persones}"
+            min="${inscrits}"
+            style="width:60px;"
+          />
+          <button
+            class="btn btn-sm btn-primary"
+            onclick="updateLimit(${sessio.id}, ${inscrits})"
+          >
+            Desa
+          </button>
+        </td>
+
+        <td>${sessio.disciplina}</td>
+        <td>${sessio.entrenador}</td>
+        <td>
+          <button
+            class="btn btn-success"
+            onclick="mostrarInscripcio(${sessio.id})"
+          >Inscriure's</button>
+        </td>
+        <td>
+          <button
+            class="btn"
+            onclick="mostrarInscrits(${sessio.id})"
+          >Veure</button>
+        </td>
+        <td>
+          <button
+            class="btn btn-primary"
+            onclick="goToUpdate(${sessio.id})"
+          >Update</button>
+        </td>
+        <td>
+          <button
+            class="btn btn-danger"
+            onclick="confirmDelete(${sessio.id})"
+          >Delete</button>
+        </td>
+      </tr>
+    `;
+  });
+
+  tableHTML += `
+      </tbody>
+    </table>
+  `;
+  table.innerHTML = tableHTML;
+}
+/**
+ * Llegeix el valor de l'input i fa PUT a /api/sessions/:id/limit
+ * @param {number} id       - ID de la sessió
+ * @param {number} inscrits - número actual d'inscrits (limit ≥ inscrits)
+ */
+function updateLimit(id, inscrits) {
+  const input = document.getElementById(`limit-${id}`);
+  const nouLimit = parseInt(input.value, 10);
+
+  if (isNaN(nouLimit) || nouLimit < inscrits) {
+    return alert(`El límit ha de ser un nombre ≥ ${inscrits}.`);
+  }
+
+  fetch(`http://localhost:3000/api/sessions/${id}/limit`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ newLimit: nouLimit })
+  })
+  .then(async res => {
+    // Llegim la resposta com JSON, si hi ha error ho processem
+    const payload = await res.json().catch(() => null);
+    if (!res.ok) {
+      throw new Error(payload?.error || res.statusText);
+    }
+    return payload;
+  })
+  .then(updatedSessio => {
+    // Suposem que el backend retorna l'objecte sessio amb limit_persones
+    if (updatedSessio?.limit_persones != null) {
+      input.value = updatedSessio.limit_persones;
+    }
+    alert('Límit de participants actualitzat!');
+  })
+  .catch(err => {
+    alert(`Error actualitzant límit: ${err.message}`);
+    // reassignem el valor antic, perquè no quedi 0 si falla
+    input.value = inscrits;
+  });
+}
+
+
+
+
+function loadSessions() {
+    fetch('http://localhost:3000/api/sessions')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch sessions');
+            }
+            return response.json();
+        })
+        .then(data => {
+            allSessions = data;
+            console.log(data);
+            renderTable(allSessions);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('table').innerHTML =
+                `<p class="text-danger">Error al carregar les sessions.</p>`;
+        });
+
 function loadSessions() {
   fetch('http://localhost:3000/api/sessions')
     .then(response => {
@@ -112,6 +256,8 @@ function loadMembers(sessions) {
         `<p class="text-danger">Error al carregar els membres.</p>`;
     });
 }
+
+
 
 function loadAvailableSessions() {
   const disciplina = document.getElementById('filtreDisciplina').value;

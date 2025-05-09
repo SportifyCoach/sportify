@@ -31,10 +31,18 @@ class SessioService {
     return docs.map(d => new Sessio(d));
   }
 
+  async updateLimit(id, newLimit) {
+    const sessio = await repo.findById(id);
+    if (!sessio) throw new Error('Sessió no trobada');
+    if (newLimit < sessio.inscrits_count) 
+      throw new Error(`El límit ha de ser ≥ ${sessio.inscrits_count}`);
+    await repo.updateLimit(id, newLimit);
+    return await repo.findById(id);
+  }
+
   async getValoracionsPerEntrenador(dni) {
     return await repo.findValoracions(dni);
   }
-  
 }
 
 module.exports = new SessioService();

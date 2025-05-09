@@ -49,6 +49,21 @@ exports.getAvailableSessions = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
+exports.update = async (req, res, next) => {
+  try {
+    const updated = await service.update(req.params.id, req.body);
+    res.json(updated);
+  } catch (e) { next(e); }
+};
+
+exports.updateLimit = async (req, res, next) => {
+  try {
+    const { newLimit } = req.body;
+    const updated = await service.updateLimit(req.params.id, newLimit);
+    res.json(updated);
+  } catch (e) { next(e); }
+};
+
 exports.getValoracionsPerEntrenador = async (req, res, next) => {
   try {
     const { dni } = req.params;
@@ -56,4 +71,5 @@ exports.getValoracionsPerEntrenador = async (req, res, next) => {
     res.json(valoracions);
   } catch (e) { next(e); }
 };
+
 
