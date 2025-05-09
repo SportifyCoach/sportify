@@ -75,6 +75,9 @@ router.post('/', ctrl.create);
  */
 router.get('/disponibles', ctrl.getAvailableSessions);
 
+router.put('/:id', ctrl.update);
+
+
 /**
  * @openapi
  * /api/sessions/{id}:
@@ -96,8 +99,5 @@ router.get('/disponibles', ctrl.getAvailableSessions);
  *         description: La sessió no existeix o no és futura
  */
 router.delete('/:id', ctrl.remove);
-
-//router.put('/:dni', ctrl.update); // todo update
-//router.delete('/:dni', ctrl.remove); // todo delete
 
 module.exports = router;
