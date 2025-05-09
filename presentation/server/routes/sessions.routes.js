@@ -75,6 +75,28 @@ router.post('/', ctrl.create);
  */
 router.get('/disponibles', ctrl.getAvailableSessions);
 
+/**
+ * @openapi
+ * /api/sessions/{id}:
+ *   delete:
+ *     summary: Eliminar una sessió futura per ID
+ *     tags:
+ *       - Sessions
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID de la sessió a eliminar
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Sessió eliminada correctament
+ *       400:
+ *         description: La sessió no existeix o no és futura
+ */
+router.delete('/:id', ctrl.remove);
+
 //router.put('/:dni', ctrl.update); // todo update
 //router.delete('/:dni', ctrl.remove); // todo delete
 

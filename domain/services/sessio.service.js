@@ -23,10 +23,9 @@ class SessioService {
   }
 
 
-  //todo remove
-  async remove(dni) {
-    const ok = await repo.delete(dni);
-    if (ok.deletedCount === 0) throw new Error('Esportista no trobat');
+  async remove(id) {
+    const result = await repo.delete(id);
+    if (result.deletedCount === 0) throw new Error('No es pot eliminar: la sessió no existeix o no és futura');
   }
 
   async getAvailable(filters) {
