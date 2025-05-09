@@ -56,7 +56,7 @@ function loadEsportistes() {
 }
 
 function goToUpdate(dni) {
-    window.location.href = `update.html?dni=${dni}`;
+    window.location.href = `updateEsportista.html?dni=${dni}`;
   }
 
 function setupSearch() {

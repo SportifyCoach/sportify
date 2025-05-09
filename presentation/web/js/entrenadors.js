@@ -29,7 +29,8 @@ function renderTable(llista) {
         <tr>
           <th>DNI</th><th>Nom</th><th>Cognoms</th>
           <th>Email</th><th>Especialitat</th><th>Experiència</th>
-          <th>Accions</th>
+          <th>Editar</th>
+          <th>Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +42,7 @@ function renderTable(llista) {
             <td>${e.email}</td>
             <td>${e.especialitat}</td>
             <td>${e.experiencia}</td>
+            <td><button class="btn btn-primary" onclick="editEntrenador('${e.dni}')">Editar</button></td>
             <td><button class="btn-danger" onclick="confirmDeleteEntrenador('${e.dni}')">DELETE</button>
             </td>
           </tr>`).join('')}
@@ -107,6 +109,10 @@ function confirmDeleteEntrenador(dni) {
   textConfirmacio.textContent =
     `Estàs segur que vols eliminar l'entrenador amb DNI ${dni}?`;
   popupFonsDelete.style.display = 'flex';
+}
+
+function editEntrenador(dni) {
+  window.location.href = `updateEntrenador.html?dni=${dni}`;
 }
 
 confirmarDelete.addEventListener('click', () => {
