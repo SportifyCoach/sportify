@@ -28,13 +28,14 @@ exports.update = async (req, res, next) => {
 };
 
 
-//todo remove
 exports.remove = async (req, res, next) => {
   try {
-    const { dni } = req.params;
-    await service.remove(dni);
+    const { id } = req.params;
+    await service.remove(id);
     res.status(204).end();
-  } catch (e) { next(e); }
+  } catch (e) {
+    next(e);
+  }
 };
 
 exports.getAvailableSessions = async (req, res, next) => {

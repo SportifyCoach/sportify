@@ -32,9 +32,9 @@
         </div>
         <div class="container">
             <!-- Fons fosc + Popup -->
-            <div id="popupFons" class="popup-fons">
+            <div id="popupFonsSessio" class="popup-fons">
                 <div class="popup">
-                    <span class="tancar-popup" id="tancarPopup">&times;</span>
+                    <span class="tancar-popup" id="tancarPopupSessio">&times;</span>
                     <h2>Registrar Sessió</h2>
                     <form id="registreSessioForm">
                         <label for="id">ID de la Sessió:</label>
@@ -59,20 +59,20 @@
             </div>
 
             <!-- Fons fosc + Popup de confirmació d'eliminació -->
-            <div id="popupFonsDelete" class="popup-fons">
+            <div id="popupFonsDeleteSessio" class="popup-fons">
                 <div class="popup">
-                    <span class="tancar-popup" id="tancarPopupDelete">&times;</span>
-                    <h2>Confirmar eliminació</h2>
-                    <p id="textConfirmacio">Estàs segur que vols eliminar aquesta sessió?</p>
-                    <button id="confirmarDelete" class="btn-danger">Sí, eliminar</button>
-                    <button id="cancelarDelete">Cancel·lar</button>
+                  <span class="tancar-popup" id="tancarPopupDeleteSessio">&times;</span>
+                  <h2>Confirmar eliminació</h2>
+                  <p id="textConfirmacioSessio">Estàs segur que vols eliminar aquesta sessió?</p>
+                  <button id="confirmarDeleteSessio" class="btn-danger">Sí, eliminar</button>
+                  <button id="cancelarDeleteSessio">Cancel·lar</button>
                 </div>
-            </div>
+              </div>
 
             <h2>Sessions</h2>
             <div class="crud">
                 <div class="crud-top">
-                    <button id="obrirPopup">Registrar sessió</button>
+                    <button id="obrirPopupSessio">Registrar sessió</button>
                     <input class="search-bar" id="search-bar" type="text" placeholder="Cerca sessió per ID">
                     <input type="text" id="filtreDisciplina" placeholder="Filtra per disciplina">
                     <input type="text" id="filtreEntrenador" placeholder="Filtra per entrenador">

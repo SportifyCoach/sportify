@@ -40,12 +40,21 @@ class SessioRepository {
   }
 
 
-  //todo el delete
-  async delete(dni) {
-    const [res] = await getPool().query(
-      'DELETE FROM esportista WHERE dni = :dni',
-      { dni },
+  async delete(id) {
+    const conn = getPool();
+  
+    // Elimina entrenaments relacionats
+    await conn.query(
+      'DELETE FROM entrenament WHERE sessio_id = :id',
+      { id }
     );
+  
+    // Ara sí, elimina la sessió
+    const [res] = await conn.query(
+      'DELETE FROM sessio WHERE id = :id AND date > NOW()',
+      { id }
+    );
+  
     return { deletedCount: res.affectedRows };
   }
 

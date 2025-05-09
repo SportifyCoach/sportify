@@ -1,4 +1,16 @@
 let allSessions = [];
+let sessioAEliminar = null;
+
+const popupFonsDeleteSessio = document.getElementById("popupFonsDeleteSessio");
+const tancarPopupDeleteSessio = document.getElementById("tancarPopupDeleteSessio");
+const confirmarDeleteSessio = document.getElementById("confirmarDeleteSessio");
+const cancelarDeleteSessio = document.getElementById("cancelarDeleteSessio");
+const textConfirmacioSessio = document.getElementById("textConfirmacioSessio");
+
+const obrirPopupSessio = document.getElementById("obrirPopupSessio");
+const popupFonsSessio = document.getElementById("popupFonsSessio");
+const tancarPopupSessio = document.getElementById("tancarPopupSessio");
+
 
 function renderTable(sessions) {
     const table = document.getElementById('table');
@@ -27,7 +39,7 @@ function renderTable(sessions) {
                 <td>${sessio.disciplina}</td>
                 <td>${sessio.entrenador}</td>
                 <td><button class="btn btn-primary" onclick="goToUpdate('')">Update //todo</button></td> 
-                <td><button class="btn btn-danger" onclick="confirmDelete('')">Delete //todo</button></td>
+                <td><button class="btn btn-danger" onclick="confirmDelete(${sessio.id})">Delete</button></td>
             </tr>
         `;
     });
@@ -113,107 +125,62 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('mostrarTotes').addEventListener('click', loadSessions);
 });
 
-const obrirPopup = document.getElementById("obrirPopup");
-const popupFons = document.getElementById("popupFons");
-const tancarPopup = document.getElementById("tancarPopup");
 
-
-obrirPopup.addEventListener("click", () => popupFons.style.display = "flex");
+obrirPopupSessio.addEventListener("click", () => popupFonsSessio.style.display = "flex");
   
-tancarPopup.addEventListener("click", () => popupFons.style.display = "none");
+tancarPopupSessio.addEventListener("click", () => popupFonsSessio.style.display = "none");
   
   // Tancar fent clic fora del formulari
 window.addEventListener("click", (e) => {
-    if (e.target === popupFons) popupFons.style.display = "none";
+    if (e.target === popupFonsSessio) popupFonsSessio.style.display = "none";
 });
 
 
 const registreForm = document.getElementById('registreForm');
 const missatge = document.getElementById('missatge');
 
-registreForm.addEventListener('submit', (e) => {
-    e.preventDefault();
 
-    const dni = document.getElementById('dni').value;
-    const nom = document.getElementById('nom').value;
-    const cognoms = document.getElementById('cognoms').value;
-    const tlf = document.getElementById('tlf').value;
-    const email = document.getElementById('email').value;
-
-    // Enviament de dades al servidor
-    fetch('http://localhost:3000/api/esportistes', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ dni, nom, cognoms, tlf, email}),
-    })
-    .then(response => {
-        if (!response.ok) throw new Error('Error al afegir esportista');
-        return response.text();
-    })
-    .then(msg => {
-        missatge.style.color = 'green';
-        missatge.textContent = msg;
-        registreForm.reset();
-        popupFons.style.display = 'none';
-        loadEsportistes();
-    })
-    .catch(err => {
-        missatge.style.color = 'red';
-        missatge.textContent = err.message;
-    });
-});
-
-let dniAEliminar = null;
-
-const popupFonsDelete = document.getElementById("popupFonsDelete");
-const tancarPopupDelete = document.getElementById("tancarPopupDelete");
-const confirmarDelete = document.getElementById("confirmarDelete");
-const cancelarDelete = document.getElementById("cancelarDelete");
-const textConfirmacio = document.getElementById("textConfirmacio");
-
-function confirmDelete(dni) {
-    dniAEliminar = dni;
-    textConfirmacio.textContent = `Estàs segur que vols eliminar l'esportista amb DNI ${dni}?`;
-    popupFonsDelete.style.display = "flex";
+function confirmDelete(id) {
+    sessioAEliminar = id;
+    textConfirmacioSessio.textContent = `Estàs segur que vols eliminar la sessió amb ID ${id}?`;
+    popupFonsDeleteSessio.style.display = "flex";
 }
 
-confirmarDelete.addEventListener("click", () => {
-    if (!dniAEliminar) return;
-
-    fetch(`http://localhost:3000/api/esportistes/${dniAEliminar}`, {
-        method: 'DELETE'
+confirmarDeleteSessio.addEventListener("click", () => {
+    if (!sessioAEliminar) return;
+  
+    fetch(`http://localhost:3000/api/sessions/${sessioAEliminar}`, {
+      method: 'DELETE'
     })
     .then(response => {
-        if (!response.ok) throw new Error("No s'ha pogut eliminar l'esportista");
-        return response.text();
+      if (!response.ok) throw new Error("No s'ha pogut eliminar la sessió");
+      return response.text();
     })
-    .then(msg => {
-        popupFonsDelete.style.display = "none";
-        dniAEliminar = null;
-        loadEsportistes();
+    .then(() => {
+        popupFonsDeleteSessio.style.display = "none";
+      sessioAEliminar = null;
+      loadSessions(); // ← refresca la taula
     })
     .catch(err => {
-        alert("Error: " + err.message);
-        popupFonsDelete.style.display = "none";
-        dniAEliminar = null;
+      alert("Error: " + err.message);
+      popupFonsDeleteSessio.style.display = "none";
+      sessioAEliminar = null;
     });
+  });
+
+  cancelarDeleteSessio.addEventListener("click", () => {
+    popupFonsDeleteSessio.style.display = "none";
+    sessioAEliminar = null;
 });
 
-cancelarDelete.addEventListener("click", () => {
-    popupFonsDelete.style.display = "none";
-    dniAEliminar = null;
-});
-
-tancarPopupDelete.addEventListener("click", () => {
-    popupFonsDelete.style.display = "none";
-    dniAEliminar = null;
+tancarPopupDeleteSessio.addEventListener("click", () => {
+    popupFonsDeleteSessio.style.display = "none";
+    sessioAEliminar = null;
 });
 
 window.addEventListener("click", (e) => {
-    if (e.target === popupFonsDelete) {
-        popupFonsDelete.style.display = "none";
-        dniAEliminar = null;
+    if (e.target === popupFonsDeleteSessio) {
+        popupFonsDeleteSessio.style.display = "none";
+        sessioAEliminar = null;
     }
 });
