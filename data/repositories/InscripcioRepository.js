@@ -44,6 +44,16 @@ class InscripcioRepository {
     `);
     return rows;
   }
+
+  async findBySessio(sessio_id) {
+    const [rows] = await getPool().query(`
+      SELECT e.dni, e.nom, e.cognom
+      FROM inscripcio i
+      JOIN esportista e ON i.esportista_dni = e.dni
+      WHERE i.sessio_id = :sessio_id
+    `, { sessio_id });
+    return rows;
+  }
 }
 
 module.exports = new InscripcioRepository();

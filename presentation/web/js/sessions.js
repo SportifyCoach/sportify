@@ -24,6 +24,7 @@ function renderTable(sessions) {
                     <th>Disciplina</th>
                     <th>Entrenador</th>
                     <th>Inscripció</th>
+                    <th>Inscrits</th>
                     <th>Update</th>
                     <th>Delete</th>
                 </tr>
@@ -40,6 +41,7 @@ function renderTable(sessions) {
                 <td>${sessio.disciplina}</td>
                 <td>${sessio.entrenador}</td>
                 <td><button class="btn btn-success" onclick="mostrarInscripcio(${sessio.id})">Inscriure's</button></td>
+                <td><button class="btn" onclick="mostrarInscrits(${sessio.id})">Veure</button></td>
                 <td><button class="btn btn-primary" onclick="goToUpdate('')">Update //todo</button></td> 
                 <td><button class="btn btn-danger" onclick="confirmDelete(${sessio.id})">Delete</button></td>
             </tr>
@@ -225,5 +227,43 @@ document.getElementById('confirmarInscripcio').addEventListener('click', () => {
     .catch(err => {
       missatge.style.color = 'red';
       missatge.textContent = err.message;
+    });
+});
+
+let sessioAConsultar = null;
+
+function mostrarInscrits(id) {
+  sessioAConsultar = id;
+  document.getElementById('llistaInscrits').innerHTML = '';
+  document.getElementById('missatgeInscrits').textContent = '';
+  document.getElementById('dniEntrenadorCheck').value = '';
+  document.getElementById('textInscritsSessio').textContent = `Sessió ID: ${id}`;
+  document.getElementById('popupInscrits').style.display = 'flex';
+}
+
+document.getElementById('tancarPopupInscrits').addEventListener('click', () => {
+  document.getElementById('popupInscrits').style.display = 'none';
+});
+
+document.getElementById('verificarEntrenador').addEventListener('click', () => {
+  const dni = document.getElementById('dniEntrenadorCheck').value;
+
+  fetch(`http://localhost:3000/api/inscripcions/${sessioAConsultar}?dni=${dni}`)
+    .then(res => {
+      if (!res.ok) return res.json().then(err => { throw new Error(err.error) });
+      return res.json();
+    })
+    .then(data => {
+      const list = document.getElementById('llistaInscrits');
+      list.innerHTML = '';
+      data.forEach(e => {
+        const li = document.createElement('li');
+        li.textContent = `${e.nom} ${e.cognom} (${e.dni})`;
+        list.appendChild(li);
+      });
+    })
+    .catch(err => {
+      document.getElementById('missatgeInscrits').style.color = 'red';
+      document.getElementById('missatgeInscrits').textContent = err.message;
     });
 });

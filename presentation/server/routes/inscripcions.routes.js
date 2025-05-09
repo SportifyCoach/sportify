@@ -56,4 +56,47 @@ router.post('/', ctrl.create);
  */
 router.get('/', ctrl.getAll);
 
+/**
+ * @openapi
+ * /inscripcions/{id}:
+ *   get:
+ *     summary: Llista els esportistes inscrits a una sessió si ets l'entrenador
+ *     tags:
+ *       - Inscripcions
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID de la sessió
+ *       - in: query
+ *         name: dni
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: DNI de l'entrenador que consulta
+ *     responses:
+ *       200:
+ *         description: Llista d'esportistes inscrits
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   dni:
+ *                     type: string
+ *                   nom:
+ *                     type: string
+ *                   cognom:
+ *                     type: string
+ *       403:
+ *         description: No ets l'entrenador d’aquesta sessió
+ *       404:
+ *         description: Sessió no trobada
+ */
+router.get('/:id', ctrl.getBySessioIfEntrenador);
+
 module.exports = router;
