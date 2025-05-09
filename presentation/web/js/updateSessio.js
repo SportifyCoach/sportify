@@ -17,9 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sessio) {
           idInput.value = sessio.id;
           limit_personesInput.value = sessio.limit_persones;
-          dateInput.value = sessio.date;
           entrenadorInput.value = sessio.entrenador;
           disciplinaInput.value = sessio.disciplina;
+          const date = new Date(sessio.date);
+          const iso = date.toISOString().slice(0, 16); // Format YYYY-MM-DDTHH:MM
+          dateInput.value = iso;
+
         }
       });
   
