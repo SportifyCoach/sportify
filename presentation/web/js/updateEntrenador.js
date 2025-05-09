@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     const dni = new URLSearchParams(window.location.search).get('dni');
-    const emailInput = document.getElementById('email');
-    const nomInput = document.getElementById('nom');
-    const cognomsInput = document.getElementById('cognoms');
     const especialitatInput = document.getElementById('especialitat');
     const experienciaInput = document.getElementById('experiencia');
     const dniInput = document.getElementById('dni');
@@ -14,9 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const entrenador = data.find(e => e.dni === dni);
         if (entrenador) {
           dniInput.value = entrenador.dni;
-          emailInput.value = entrenador.email;
-          nomInput.value = entrenador.nom;
-          cognomsInput.value = entrenador.cognoms;
           especialitatInput.value = entrenador.especialitat;
           experienciaInput.value = entrenador.experiencia;
         }
@@ -28,9 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
   
       const updatedData = {
-        email: emailInput.value,
-        nom: nomInput.value,
-        cognoms: cognomsInput.value,
         especialitat: especialitatInput.value,
         experiencia: experienciaInput.value
       };
