@@ -28,13 +28,15 @@ class SessioRepository {
 
 
   
-  async update(id, { limit_persones, disciplina }) {
+  async update(id, { limit_persones, disciplina, date, entrenador }) {
     await getPool().query(
       `UPDATE sessio
          SET limit_persones = COALESCE(:limit_persones,limit_persones),
-             disciplina = COALESCE(:disciplina,disciplina)
+             disciplina = COALESCE(:disciplina,disciplina),
+             date = COALESCE(:date,date),
+             entrenador = COALESCE(:entrenador,entrenador)
        WHERE id = :id`,
-      { id, limit_persones, disciplina },
+      { id, limit_persones, disciplina, date, entrenador },
     );
     return this.findById(id);
   }
