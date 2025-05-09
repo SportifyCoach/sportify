@@ -22,11 +22,14 @@ class SessioService {
     return new Esportista(upd);
   }
 
+  async remove(id) {
+    const result = await repo.delete(id);
+    if (result.deletedCount === 0) throw new Error('No es pot eliminar: la sessió no existeix o no és futura');
+  }
 
-  //todo remove
-  async remove(dni) {
-    const ok = await repo.delete(dni);
-    if (ok.deletedCount === 0) throw new Error('Esportista no trobat');
+  async getAvailable(filters) {
+    const docs = await repo.findAvailable(filters);
+    return docs.map(d => new Sessio(d));
   }
 }
 

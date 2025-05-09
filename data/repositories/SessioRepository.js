@@ -17,7 +17,7 @@ class SessioRepository {
 
   async create(data) {
     const { date, limit_persones, disciplina, entrenador } = data;
-    await getPool().query(
+    const [result] = await getPool().query(
       `INSERT INTO sessio (date, limit_persones, disciplina, entrenador)
        VALUES (:date, :limit_persones, :disciplina, :entrenador)`,
       { date, limit_persones, disciplina, entrenador },
@@ -39,14 +39,52 @@ class SessioRepository {
     return this.findByDni(dni);
   }
 
-
-  //todo el delete
-  async delete(dni) {
-    const [res] = await getPool().query(
-      'DELETE FROM esportista WHERE dni = :dni',
-      { dni },
+  async delete(id) {
+    const conn = getPool();
+  
+    // Elimina entrenaments relacionats
+    await conn.query(
+      'DELETE FROM entrenament WHERE sessio_id = :id',
+      { id }
     );
+  
+    // Ara sí, elimina la sessió
+    const [res] = await conn.query(
+      'DELETE FROM sessio WHERE id = :id AND date > NOW()',
+      { id }
+    );
+  
     return { deletedCount: res.affectedRows };
+  }
+
+  async findAvailable({ disciplina, entrenador, date } = {}) {
+    let query = `
+      SELECT *
+      FROM sessio
+      WHERE date > NOW()
+    `;
+  
+    const params = {};
+  
+    if (disciplina) {
+      query += ' AND disciplina = :disciplina';
+      params.disciplina = disciplina;
+    }
+  
+    if (entrenador) {
+      query += ' AND entrenador = :entrenador';
+      params.entrenador = entrenador;
+    }
+  
+    if (date) {
+      query += ' AND DATE(date) = :date';
+      params.date = date;
+    }
+  
+    query += ' ORDER BY date ASC';
+  
+    const [rows] = await getPool().query(query, params);
+    return rows;
   }
 }
 

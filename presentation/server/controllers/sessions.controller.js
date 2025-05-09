@@ -27,12 +27,25 @@ exports.update = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
-
-//todo remove
 exports.remove = async (req, res, next) => {
   try {
-    const { dni } = req.params;
-    await service.remove(dni);
+    const { id } = req.params;
+    await service.remove(id);
     res.status(204).end();
+  } catch (e) {
+    next(e);
+  }
+};
+
+exports.getAvailableSessions = async (req, res, next) => {
+  try {
+    const filters = {
+      disciplina: req.query.disciplina,
+      entrenador: req.query.entrenador,
+      date: req.query.date,
+    };
+
+    const sessions = await service.getAvailable(filters);
+    res.json(sessions);
   } catch (e) { next(e); }
 };

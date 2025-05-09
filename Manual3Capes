@@ -82,3 +82,7 @@ Bones pràctiques
         Noves funcionalitats ⇒ crea primer Service i Repository si cal.
 
         Front: afegeix mètodes a esportistes.js (API wrapper + UI).
+        
+
+Connexió bbdd:
+mysql -h ubiwan.epsevg.upc.edu -P 3306 -u amep10 -piKae6iePa7aiH6 amep10
