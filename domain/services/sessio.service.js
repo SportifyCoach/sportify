@@ -30,6 +30,11 @@ class SessioService {
     const docs = await repo.findAvailable(filters);
     return docs.map(d => new Sessio(d));
   }
+
+  async getValoracionsPerEntrenador(dni) {
+    return await sessioRepository.findValoracions(dni);
+  }
+  
 }
 
 module.exports = new SessioService();

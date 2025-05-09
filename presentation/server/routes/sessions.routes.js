@@ -75,6 +75,8 @@ router.post('/', ctrl.create);
  */
 router.get('/disponibles', ctrl.getAvailableSessions);
 
+router.get('/valoracions/entrenador/:dni', sessioController.getValoracionsPerEntrenador);
+
 router.put('/:id', ctrl.update);
 
 

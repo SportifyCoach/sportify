@@ -48,3 +48,15 @@ exports.getAvailableSessions = async (req, res, next) => {
     res.json(sessions);
   } catch (e) { next(e); }
 };
+
+exports.getValoracionsPerEntrenador = async (req, res) => {
+  try {
+    const dni = req.params.dni;
+    const valoracions = await sessioService.getValoracionsPerEntrenador(dni);
+    res.json(valoracions);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error en obtenir les valoracions' });
+  }
+};
+
