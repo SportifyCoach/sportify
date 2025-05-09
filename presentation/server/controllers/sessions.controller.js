@@ -27,7 +27,6 @@ exports.update = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
-
 exports.remove = async (req, res, next) => {
   try {
     const { id } = req.params;
