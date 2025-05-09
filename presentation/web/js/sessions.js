@@ -51,7 +51,7 @@ function renderTable(sessions, members) {
               <div class="session-footer">
                   <div class="session-footer-row">
                       <button id="add-member-${sessio.id}" class="btn btn-success small" onclick="mostrarInscripcio(${sessio.id})">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}</button>
-                      <button id="edit-sessio-${sessio.id}" class="btn btn-primary small">Editar Sessió</button> <!--todo-->
+                      <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button> 
                   </div>
                   <div class="session-footer-row">
                       <button id="add-member-${sessio.id}" class="btn btn-danger small">Eliminar Participants</button> <!--todo-->
@@ -129,12 +129,12 @@ function loadAvailableSessions() {
     });
 }
 
-//todo tot cap abaix!!
 
 
-function goToUpdate(dni) {
-  window.location.href = `update.html?dni=${dni}`;
+function goToUpdate(id) {
+  window.location.href = `updateSessio.html?id=${id}`;
 }
+
 
 
 function setupSearch() {
