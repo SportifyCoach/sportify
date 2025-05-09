@@ -27,3 +27,15 @@ exports.remove = async (req, res, next) => {
     res.status(204).end();
   } catch (e) { next(e); }
 };
+
+// **Controlador per validar entrenadors**
+exports.validate = async (req, res, next) => {
+  try {
+    const { dni } = req.params;
+    const { approved, motivo } = req.body;
+    const entrenador = await service.validate(dni, approved, motivo);
+    res.json(entrenador);
+  } catch (e) {
+    next(e);
+  }
+};

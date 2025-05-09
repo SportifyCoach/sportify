@@ -7,4 +7,7 @@ router.get('/',  ctrl.getAll);
 router.put('/:dni', ctrl.update);
 router.delete('/:dni', ctrl.remove);
 
+// Ruta per validar entrenadors
+router.post('/:dni/validate', ctrl.validate);
+
 module.exports = router;
