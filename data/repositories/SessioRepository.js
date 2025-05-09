@@ -88,6 +88,18 @@ class SessioRepository {
     const [rows] = await getPool().query(query, params);
     return rows;
   }
+  async findValoracions(dni) {
+    const query = `
+        SELECT e.*
+        FROM entrenament e
+        JOIN sessio s ON e.sessio_id = s.id
+        WHERE s.entrenador = :dni;
+    `;
+    const [rows] = await getPool().query(query, {dni});
+    return rows.map(row => row.valoracio);
+  }
 }
+
+  
 
 module.exports = new SessioRepository();

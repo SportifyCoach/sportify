@@ -48,3 +48,12 @@ exports.getAvailableSessions = async (req, res, next) => {
     res.json(sessions);
   } catch (e) { next(e); }
 };
+
+exports.getValoracionsPerEntrenador = async (req, res, next) => {
+  try {
+    const { dni } = req.params;
+    const valoracions = await service.getValoracionsPerEntrenador(dni);
+    res.json(valoracions);
+  } catch (e) { next(e); }
+};
+
