@@ -39,7 +39,6 @@ class SessioRepository {
     return this.findByDni(dni);
   }
 
-
   async delete(id) {
     const conn = getPool();
   
