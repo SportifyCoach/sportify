@@ -46,7 +46,6 @@ function loadEsportistes() {
         })
         .then(data => {
             allEsportistes = data;
-            console.log(data);
             renderTable(allEsportistes);
         })
         .catch(error => {
