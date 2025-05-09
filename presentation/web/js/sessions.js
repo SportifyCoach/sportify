@@ -11,6 +11,57 @@ const obrirPopupSessio = document.getElementById("obrirPopupSessio");
 const popupFonsSessio = document.getElementById("popupFonsSessio");
 const tancarPopupSessio = document.getElementById("tancarPopupSessio");
 
+function renderTable(sessions, members) {
+  const table = document.getElementById('table');
+  table.innerHTML = '';
+
+  sessions.forEach(sessio => {
+    // Filtrar els membres que coincideixen amb la sessio
+    const filteredMembers = members.filter(member => member.sessio_id === sessio.id);
+
+    // Convertir la data a un format llegible
+    const date = new Date(sessio.date);
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    sessio.date = date.toLocaleDateString('ca-ES', options)
+
+    sessio.disciplina = sessio.disciplina.toUpperCase();
+
+    table.innerHTML += `
+          <div class="session">
+              <div class="session-title">
+                  <span> <strong> ${sessio.disciplina} </strong> - ${sessio.date}  </span> 
+                  <span> <strong> Entrenador: </strong> ${sessio.entrenador} <strong>Val mitja: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
+              </div>
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th>Participants</th>
+                          <th>Valoració</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      ${filteredMembers.map(member => `
+                          <tr>
+                              <td>${member.esportista_dni}</td>
+                              <td>${member.valoracio}</td>
+                          </tr>
+                      `).join('')}
+                  </tbody>
+              </table>
+              <div class="session-footer">
+                  <div class="session-footer-row">
+                      <button id="add-member-${sessio.id}" class="btn btn-success small" onclick="mostrarInscripcio(${sessio.id})">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}</button>
+                      <button id="edit-sessio-${sessio.id}" class="btn btn-primary small">Editar Sessió</button> <!--todo-->
+                  </div>
+                  <div class="session-footer-row">
+                      <button id="add-member-${sessio.id}" class="btn btn-danger small">Eliminar Participants</button> <!--todo-->
+                      <button id="del-m-${sessio.id}" class="btn btn-danger small" onclick="confirmDelete(${sessio.id})">Eliminar Sessió</button>
+                  </div>
+              </div>
+          </div>
+      `;
+  });
+}
 
 function renderTable(sessions) {
   const table = document.getElementById('table');
@@ -155,75 +206,142 @@ function loadSessions() {
             document.getElementById('table').innerHTML =
                 `<p class="text-danger">Error al carregar les sessions.</p>`;
         });
+
+function loadSessions() {
+  fetch('http://localhost:3000/api/sessions')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch sessions');
+      }
+      return response.json();
+    })
+    .then(data => {
+      loadMembers(data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('table').innerHTML =
+        `<p class="text-danger">Error al carregar les sessions.</p>`;
+    });
+}
+
+function loadMembers(sessions) {
+  fetch(`http://localhost:3000/api/entrenaments/`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch members');
+      }
+      return response.json();
+    })
+    .then(members => {
+      // Per cada sessió, obtenir la valoració de forma paral·lela
+      const valoracionsPromises = sessions.map(sessio =>
+        loadValoracionsEntrenador(sessio.entrenador)
+          .then(valoracio => {
+            sessio.valMitja = valoracio;
+          })
+      );
+
+      // Quan totes les valoracions estiguin carregades
+      Promise.all(valoracionsPromises).then(() => {
+        renderTable(sessions, members);
+      });
+    })
+    .then(data => {
+      renderTable(sessions, data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('table').innerHTML =
+        `<p class="text-danger">Error al carregar els membres.</p>`;
+    });
 }
 
 
 
 function loadAvailableSessions() {
-    const disciplina = document.getElementById('filtreDisciplina').value;
-    const entrenador = document.getElementById('filtreEntrenador').value;
+  const disciplina = document.getElementById('filtreDisciplina').value;
+  const entrenador = document.getElementById('filtreEntrenador').value;
 
-    let url = 'http://localhost:3000/api/sessions/disponibles';
-    const params = new URLSearchParams();
+  let url = 'http://localhost:3000/api/sessions/disponibles';
+  const params = new URLSearchParams();
 
-    if (disciplina) params.append('disciplina', disciplina);
-    if (entrenador) params.append('entrenador', entrenador);
+  if (disciplina) params.append('disciplina', disciplina);
+  if (entrenador) params.append('entrenador', entrenador);
 
-    if (params.toString()) {
-        url += '?' + params.toString();
-    }
-
-    fetch(url)
-        .then(res => {
-            if (!res.ok) throw new Error('Error carregant sessions disponibles');
-            return res.json();
-        })
-        .then(data => {
-            allSessions = data;
-            renderTable(data);
-        })
-        .catch(err => {
-            console.error('Error:', err);
-            document.getElementById('table').innerHTML =
-                `<p class="text-danger">Error al carregar les sessions disponibles.</p>`;
-        });
-}
-
-//todo tot cap abaix!!
-
-
-function goToUpdate(dni) {
-    window.location.href = `update.html?dni=${dni}`;
+  if (params.toString()) {
+    url += '?' + params.toString();
   }
 
-
-function setupSearch() {
-    const searchInput = document.getElementById('search-bar');
-    searchInput.addEventListener('input', () => {
-        const query = searchInput.value.trim().toLowerCase();
-        const filtered = allEsportistes.filter(e =>
-            e.dni.toLowerCase().includes(query)
-        );
-        renderTable(filtered);
+  fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error('Error carregant sessions disponibles');
+      return res.json();
+    })
+    .then(data => {
+      allSessions = data;
+      renderTable(data);
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      document.getElementById('table').innerHTML =
+        `<p class="text-danger">Error al carregar les sessions disponibles.</p>`;
     });
 }
 
+async function loadValoracionsEntrenador(dni) {
+  let url = `http://localhost:3000/api/sessions/valoracions/entrenador/${dni}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Error carregant les valoracions mitjanes');
+
+    const data = await res.json();
+
+    if (data.length === 0) return 0;
+
+    const total = data.reduce((sum, val) => sum + val, 0);
+    const mitjana = total / data.length;
+
+    return mitjana;
+  } catch (err) {
+    console.error('Error:', err);
+    return null; // o -1 si vols indicar error
+  }
+}
+
+
+function goToUpdate(dni) {
+  window.location.href = `update.html?dni=${dni}`;
+}
+
+
+function setupSearch() {
+  const searchInput = document.getElementById('search-bar');
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    const filtered = allEsportistes.filter(e =>
+      e.dni.toLowerCase().includes(query)
+    );
+    renderTable(filtered);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    loadSessions();
-    //setupSearch();
-    // Botons de filtratge
-    document.getElementById('mostrarDisponibles').addEventListener('click', loadAvailableSessions);
-    document.getElementById('mostrarTotes').addEventListener('click', loadSessions);
+  loadSessions();
+  //setupSearch();
+  // Botons de filtratge
+  document.getElementById('mostrarDisponibles').addEventListener('click', loadAvailableSessions);
+  document.getElementById('mostrarTotes').addEventListener('click', loadSessions);
 });
 
 
 obrirPopupSessio.addEventListener("click", () => popupFonsSessio.style.display = "flex");
-  
+
 tancarPopupSessio.addEventListener("click", () => popupFonsSessio.style.display = "none");
-  
-  // Tancar fent clic fora del formulari
+
+// Tancar fent clic fora del formulari
 window.addEventListener("click", (e) => {
-    if (e.target === popupFonsSessio) popupFonsSessio.style.display = "none";
+  if (e.target === popupFonsSessio) popupFonsSessio.style.display = "none";
 });
 
 
@@ -232,23 +350,23 @@ const missatge = document.getElementById('missatge');
 
 
 function confirmDelete(id) {
-    sessioAEliminar = id;
-    textConfirmacioSessio.textContent = `Estàs segur que vols eliminar la sessió amb ID ${id}?`;
-    popupFonsDeleteSessio.style.display = "flex";
+  sessioAEliminar = id;
+  textConfirmacioSessio.textContent = `Estàs segur que vols eliminar la sessió amb ID ${id}?`;
+  popupFonsDeleteSessio.style.display = "flex";
 }
 
 confirmarDeleteSessio.addEventListener("click", () => {
-    if (!sessioAEliminar) return;
-  
-    fetch(`http://localhost:3000/api/sessions/${sessioAEliminar}`, {
-      method: 'DELETE'
-    })
+  if (!sessioAEliminar) return;
+
+  fetch(`http://localhost:3000/api/sessions/${sessioAEliminar}`, {
+    method: 'DELETE'
+  })
     .then(response => {
       if (!response.ok) throw new Error("No s'ha pogut eliminar la sessió");
       return response.text();
     })
     .then(() => {
-        popupFonsDeleteSessio.style.display = "none";
+      popupFonsDeleteSessio.style.display = "none";
       sessioAEliminar = null;
       loadSessions(); // ← refresca la taula
     })
@@ -257,23 +375,23 @@ confirmarDeleteSessio.addEventListener("click", () => {
       popupFonsDeleteSessio.style.display = "none";
       sessioAEliminar = null;
     });
-  });
+});
 
-  cancelarDeleteSessio.addEventListener("click", () => {
-    popupFonsDeleteSessio.style.display = "none";
-    sessioAEliminar = null;
+cancelarDeleteSessio.addEventListener("click", () => {
+  popupFonsDeleteSessio.style.display = "none";
+  sessioAEliminar = null;
 });
 
 tancarPopupDeleteSessio.addEventListener("click", () => {
-    popupFonsDeleteSessio.style.display = "none";
-    sessioAEliminar = null;
+  popupFonsDeleteSessio.style.display = "none";
+  sessioAEliminar = null;
 });
 
 window.addEventListener("click", (e) => {
-    if (e.target === popupFonsDeleteSessio) {
-        popupFonsDeleteSessio.style.display = "none";
-        sessioAEliminar = null;
-    }
+  if (e.target === popupFonsDeleteSessio) {
+    popupFonsDeleteSessio.style.display = "none";
+    sessioAEliminar = null;
+  }
 });
 
 let sessioAInscriure = null;

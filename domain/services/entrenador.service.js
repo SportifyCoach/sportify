@@ -11,8 +11,26 @@ class EntrenadorService {
     return new Entrenador(doc);
   }
 
+  async updateContact(dni, { especialitat, experiencia }) {
+    const upd = await repo.update(dni, { especialitat, experiencia });
+    if (!upd) throw new Error('Entrenador no trobat');
+    return new Entrenador(upd);
+  }
+
   async list() {
     return (await repo.findAll()).map(d => new Entrenador(d));
+  }
+
+  async remove(dni)  { return await repo.delete(dni); }
+
+  // **Servei per validar entrenadors**
+  async validate(dni, approved, motivo) {
+    const ent = await repo.findByDni(dni);
+    if (!ent) throw new Error('Entrenador no trobat');
+    const status = approved ? 'aprobado' : 'rechazado';
+    await repo.updateStatus(dni, status, motivo);
+    const updated = await repo.findByDni(dni);
+    return new Entrenador(updated);
   }
 }
 

@@ -36,10 +36,7 @@
                 <div class="popup">
                     <span class="tancar-popup" id="tancarPopupSessio">&times;</span>
                     <h2>Registrar Sessió</h2>
-                    <form id="registreSessioForm">
-                        <label for="id">ID de la Sessió:</label>
-                        <input type="text" id="id" name="id" required>
-
+                    <form id="registreSessioForm"> <!-- TODO -->
                         <label for="titol">Títol:</label>
                         <input type="text" id="titol" name="titol" required>
 
@@ -59,48 +56,48 @@
             </div>
             <div id="popupInscripcio" class="popup-fons">
                 <div class="popup">
-                  <span class="tancar-popup" id="tancarPopupInscripcio">&times;</span>
-                  <h2>Inscriure's a la sessió</h2>
-                  <p id="textSessioInscripcio"></p>
-                  <input type="text" id="dniInscripcio" placeholder="Introdueix el teu DNI">
-                  <button id="confirmarInscripcio">Inscriure's</button>
-                  <p id="missatgeInscripcio"></p>
+                    <span class="tancar-popup" id="tancarPopupInscripcio">&times;</span>
+                    <h2>Inscriure's a la sessió</h2>
+                    <p id="textSessioInscripcio"></p>
+                    <input type="text" id="dniInscripcio" placeholder="Introdueix el teu DNI">
+                    <button id="confirmarInscripcio">Inscriure's</button>
+                    <p id="missatgeInscripcio"></p>
                 </div>
-              </div>
+            </div>
 
-              <div id="popupInscrits" class="popup-fons">
+            <div id="popupInscrits" class="popup-fons">
                 <div class="popup">
-                  <span class="tancar-popup" id="tancarPopupInscrits">&times;</span>
-                  <h2>Inscrits a la sessió</h2>
-                  <p id="textInscritsSessio"></p>
-                  <input type="text" id="dniEntrenadorCheck" placeholder="DNI de l'entrenador">
-                  <button id="verificarEntrenador">Mostrar inscrits</button>
-                  <ul id="llistaInscrits"></ul>
-                  <p id="missatgeInscrits"></p>
+                    <span class="tancar-popup" id="tancarPopupInscrits">&times;</span>
+                    <h2>Inscrits a la sessió</h2>
+                    <p id="textInscritsSessio"></p>
+                    <input type="text" id="dniEntrenadorCheck" placeholder="DNI de l'entrenador">
+                    <button id="verificarEntrenador">Mostrar inscrits</button>
+                    <ul id="llistaInscrits"></ul>
+                    <p id="missatgeInscrits"></p>
                 </div>
-              </div>
+            </div>
 
             <!-- Fons fosc + Popup de confirmació d'eliminació -->
             <div id="popupFonsDeleteSessio" class="popup-fons">
                 <div class="popup">
-                  <span class="tancar-popup" id="tancarPopupDeleteSessio">&times;</span>
-                  <h2>Confirmar eliminació</h2>
-                  <p id="textConfirmacioSessio">Estàs segur que vols eliminar aquesta sessió?</p>
-                  <button id="confirmarDeleteSessio" class="btn-danger">Sí, eliminar</button>
-                  <button id="cancelarDeleteSessio">Cancel·lar</button>
+                    <span class="tancar-popup" id="tancarPopupDeleteSessio">&times;</span>
+                    <h2>Confirmar eliminació</h2>
+                    <p id="textConfirmacioSessio">Estàs segur que vols eliminar aquesta sessió?</p>
+                    <button id="confirmarDeleteSessio" class="btn-danger">Sí, eliminar</button>
+                    <button id="cancelarDeleteSessio">Cancel·lar</button>
                 </div>
-              </div>
+            </div>
 
             <h2>Sessions</h2>
             <div class="crud">
-                <div class="crud-top">
-                    <button id="obrirPopupSessio">Registrar sessió</button>
-                    <input class="search-bar" id="search-bar" type="text" placeholder="Cerca sessió per ID">
-                    <input type="text" id="filtreDisciplina" placeholder="Filtra per disciplina">
-                    <input type="text" id="filtreEntrenador" placeholder="Filtra per entrenador">
-                    <button id="mostrarDisponibles">Mostrar només disponibles</button>
-                    <button id="mostrarTotes">Mostrar totes</button>
-
+                <div class="crud-top vertical">
+                    <button id="obrirPopupSessio" class="add-btn">Afegir Sessions</button>
+                    <input class="search-bar" id="search-bar-dis" type="text"
+                        placeholder="Cerca sessions per Disciplina">
+                    <input class="search-bar" id="search-bar-esp" type="text"
+                        placeholder="Cerca sessions per Esportista">
+                    <input class="search-bar" id="search-bar-ent" type="text"
+                        placeholder="Cerca sessions per Entrenador">
                 </div>
                 <div class="crud-content" id="table"></div>
             </div>

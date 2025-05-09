@@ -29,25 +29,73 @@ function renderTable(llista) {
         <tr>
           <th>DNI</th><th>Nom</th><th>Cognoms</th>
           <th>Email</th><th>Especialitat</th><th>Experiència</th>
-          <th>Accions</th>
+          <th>Editar</th>
+          <th>Delete</th>
         </tr>
       </thead>
       <tbody>
         ${llista.map(e => `
           <tr>
             <td>${e.dni}</td>
-            <td>${e.nom}</td>
+            <td style="color: ${
+              e.status === 'aprobado'   ? 'green'  :
+              e.status === 'rechazado'  ? 'red'    :
+              /* per defecte: pendent */         'goldenrod'
+            }">${e.nom}</td>
             <td>${e.cognoms}</td>
             <td>${e.email}</td>
             <td>${e.especialitat}</td>
             <td>${e.experiencia}</td>
-            <td><button class="btn-danger" onclick="confirmDeleteEntrenador('${e.dni}')">DELETE</button>
+            <td><button class="btn btn-primary" onclick="editEntrenador('${e.dni}')">Editar</button></td>
+            <td>
+              <button class="btn-danger"
+                      onclick="confirmDeleteEntrenador('${e.dni}')">
+                Eliminar
+              </button>
+              <div class="dropdown">
+                <div class="dropdown-content">
+                  <button onclick="validateEntrenador('${e.dni}', 'aprobado')">
+                    Aprovar
+                  </button>
+                  <button onclick="validateEntrenador('${e.dni}', 'rechazado')">
+                    Rebutjar
+                  </button>
+                </div>
+              </div>
             </td>
-          </tr>`).join('')}
+          </tr>
+        `).join('')}
       </tbody>
     </table>`;
-
 }
+
+
+// 2) Afegim la funció que crida l'API de validació
+async function validateEntrenador(dni, nouEstat) {
+  let payload = { approved: nouEstat === 'aprobado' };
+  // si es rebutjat, demanem motiu
+  if (nouEstat === 'rechazado') {
+    const motiu = prompt('Motiu de rebuig:');
+    if (motiu === null) return; // l’usuari ha cancel·lat
+    payload.motivo = motiu;
+  }
+
+  try {
+    const res = await fetch(`${API}/${dni}/validate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: res.statusText }));
+      throw new Error(err.error || 'Error validant entrenador');
+    }
+    await loadEntrenadors();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
 
 async function loadEntrenadors() {
   try {
@@ -107,6 +155,10 @@ function confirmDeleteEntrenador(dni) {
   textConfirmacio.textContent =
     `Estàs segur que vols eliminar l'entrenador amb DNI ${dni}?`;
   popupFonsDelete.style.display = 'flex';
+}
+
+function editEntrenador(dni) {
+  window.location.href = `updateEntrenador.html?dni=${dni}`;
 }
 
 confirmarDelete.addEventListener('click', () => {

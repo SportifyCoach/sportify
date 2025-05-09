@@ -42,8 +42,12 @@ if opt.init:
                 valoracio FLOAT,
                 sessio_id INT,
                 esportista_dni VARCHAR(9),
-                FOREIGN KEY (sessio_id) REFERENCES sessio(id),
+                FOREIGN KEY (sessio_id) REFERENCES sessio(id)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE,
                 FOREIGN KEY (esportista_dni) REFERENCES esportista(dni)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE
             );
         """)
     except Exception as e:
@@ -57,8 +61,12 @@ if opt.init:
                     valoracio FLOAT,
                     sessio_id INT,
                     esportista_dni VARCHAR(9),
-                    FOREIGN KEY (sessio_id) REFERENCES sessio(id),
+                    FOREIGN KEY (sessio_id) REFERENCES sessio(id)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE,
                     FOREIGN KEY (esportista_dni) REFERENCES esportista(dni)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE
                 );
             """)
     conn.commit()
