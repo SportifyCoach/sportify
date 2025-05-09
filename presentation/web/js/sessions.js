@@ -51,8 +51,9 @@ function renderTable(sessions, members) {
               <div class="session-footer">
                   <div class="session-footer-row">
                       <button id="add-member-${sessio.id}" class="btn btn-success small" onclick="mostrarInscripcio(${sessio.id})">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}</button>
-                      <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button> 
-                  </div>
+                      ${new Date(date).getTime() >= new Date().setHours(0, 0, 0, 0) ? `
+                        <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button>` : ''}                      
+                                        </div>
                   <div class="session-footer-row">
                       <button id="add-member-${sessio.id}" class="btn btn-danger small">Eliminar Participants</button> <!--todo-->
                       <button id="del-m-${sessio.id}" class="btn btn-danger small" onclick="confirmDelete(${sessio.id})">Eliminar Sessió</button>
