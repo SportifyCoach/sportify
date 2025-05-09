@@ -8,7 +8,7 @@
   <link rel="icon" href="img/logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
 
-  <title>Update Esportista</title>
+  <title>Update Entrenador</title>
 </head>
 
 <body>
@@ -29,22 +29,32 @@
       </nav>
     </div>
     <div class="container">
-      <h2>Editar esportista</h2>
+      <h2>Editar entrenador</h2>
       <form id="update-form">
         <input type="hidden" id="dni" />
 
+       
+        <label for="nom">Nom:</label>
+        <input type="text" id="nom" required><br><br>
+        
+        <label for="cognoms">Cognoms:</label>
+        <input type="text" id="cognoms" required><br><br>
+        
         <label for="email">Email:</label>
         <input type="email" id="email" required><br><br>
 
-        <label for="tlf">Telèfon:</label>
-        <input type="text" id="tlf" required><br><br>
+        <label for="especialitat">Especialitat:</label>
+        <input type="text" id="especialitat" required><br><br>
+        
+        <label for="experiencia">Experiència:</label>
+        <input type="text" id="experiencia" required><br><br>
 
         <button type="submit">Guardar</button>
       </form>
     </div>
   </div>
 
-  <script src="js/update.js"></script>
+  <script src="js/updateEntrenador.js"></script>
 </body>
 
 </html>
