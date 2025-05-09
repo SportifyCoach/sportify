@@ -32,7 +32,7 @@ class SessioService {
   }
 
   async getValoracionsPerEntrenador(dni) {
-    return await sessioRepository.findValoracions(dni);
+    return await repo.findValoracions(dni);
   }
   
 }

@@ -95,8 +95,8 @@ class SessioRepository {
         JOIN sessio s ON e.sessio_id = s.id
         WHERE s.entrenador = :dni;
     `;
-    const [rows] = await getPool.query(query, {dni});
-    return rows;
+    const [rows] = await getPool().query(query, {dni});
+    return rows.map(row => row.valoracio);
   }
 }
 

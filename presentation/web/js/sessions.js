@@ -19,6 +19,8 @@ function renderTable(sessions, members) {
     // Filtrar els membres que coincideixen amb la sessio
     const filteredMembers = members.filter(member => member.sessio_id === sessio.id);
 
+    const valoracioEntrenador = loadValoracionsEntrenador(sessio.entrenador);
+
     // Convertir la data a un format llegible
     const date = new Date(sessio.date);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -51,9 +53,8 @@ function renderTable(sessions, members) {
               <div class="session-footer">
                   <div class="session-footer-row">
                       <button id="add-member-${sessio.id}" class="btn btn-success small" onclick="mostrarInscripcio(${sessio.id})">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}</button>
-                      ${new Date(date).getTime() >= new Date().setHours(0, 0, 0, 0) ? `
-                        <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button>` : ''}                      
-                                        </div>
+                      <button id="edit-sessio-${sessio.id}" class="btn btn-primary small">Editar Sessió</button> <!--todo-->
+                  </div>
                   <div class="session-footer-row">
                       <button id="add-member-${sessio.id}" class="btn btn-danger small">Eliminar Participants</button> <!--todo-->
                       <button id="del-m-${sessio.id}" class="btn btn-danger small" onclick="confirmDelete(${sessio.id})">Eliminar Sessió</button>
@@ -130,12 +131,28 @@ function loadAvailableSessions() {
     });
 }
 
-
-
-function goToUpdate(id) {
-  window.location.href = `updateSessio.html?id=${id}`;
+function loadValoracionsEntrenador(dni) {
+  let url = `http://localhost:3000/api/sessions/valoracions/entrenador/${dni}`;
+  fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error('Error carregant les valoracions mitjes');
+      return res.json();
+    })
+    .then(data => {
+      console.log("aaaaaaaaaa");
+      console.log(data);
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      document.getElementById('table').innerHTML =
+        `<p class="text-danger">Error al carregar la valoracio mitja de l'entrenador.</p>`;
+    })
 }
 
+
+function goToUpdate(dni) {
+  window.location.href = `update.html?dni=${dni}`;
+}
 
 
 function setupSearch() {
