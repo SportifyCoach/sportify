@@ -99,8 +99,6 @@ class SessioRepository {
     return res.affectedRows;
   }
 
-}
-
   async findValoracions(dni) {
     const query = `
         SELECT e.*
