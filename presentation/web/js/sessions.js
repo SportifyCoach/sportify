@@ -12,87 +12,56 @@ const popupFonsSessio = document.getElementById("popupFonsSessio");
 const tancarPopupSessio = document.getElementById("tancarPopupSessio");
 
 
-function renderTable(sessions) {
+function renderTable(sessions, members) {
   const table = document.getElementById('table');
-  let tableHTML = `
-    <table class="table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Data</th>
-          <th>Límit persones</th>
-          <th>Disciplina</th>
-          <th>Entrenador</th>
-          <th>Inscripció</th>
-          <th>Inscrits</th>
-          <th>Update</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
+  table.innerHTML = '';
 
   sessions.forEach(sessio => {
-    // comptem inscrits si cal validar mínim
-    const inscrits = sessio.inscrits_count || 0; 
+    // Filtrar els membres que coincideixen amb la sessio
+    const filteredMembers = members.filter(member => member.sessio_id === sessio.id);
 
-    tableHTML += `
-      <tr>
-        <td>${sessio.id}</td>
-        <td>${sessio.date}</td>
+    // Convertir la data a un format llegible
+    const date = new Date(sessio.date);
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    sessio.date = date.toLocaleDateString('ca-ES', options)
 
-        <!-- Input + botó per editar límit -->
-        <td>
-          <input
-            type="number"
-            id="limit-${sessio.id}"
-            value="${sessio.limit_persones}"
-            min="${inscrits}"
-            style="width:60px;"
-          />
-          <button
-            class="btn btn-sm btn-primary"
-            onclick="updateLimit(${sessio.id}, ${inscrits})"
-          >
-            Desa
-          </button>
-        </td>
+    sessio.disciplina = sessio.disciplina.toUpperCase();
 
-        <td>${sessio.disciplina}</td>
-        <td>${sessio.entrenador}</td>
-        <td>
-          <button
-            class="btn btn-success"
-            onclick="mostrarInscripcio(${sessio.id})"
-          >Inscriure's</button>
-        </td>
-        <td>
-          <button
-            class="btn"
-            onclick="mostrarInscrits(${sessio.id})"
-          >Veure</button>
-        </td>
-        <td>
-          <button
-            class="btn btn-primary"
-            onclick="goToUpdate(${sessio.id})"
-          >Update</button>
-        </td>
-        <td>
-          <button
-            class="btn btn-danger"
-            onclick="confirmDelete(${sessio.id})"
-          >Delete</button>
-        </td>
-      </tr>
-    `;
+    table.innerHTML += `
+          <div class="session">
+              <div class="session-title">
+                  <span> <strong> ${sessio.disciplina} </strong> - ${sessio.date}  </span> 
+                  <span> <strong> Entrenador: </strong> ${sessio.entrenador} <strong>Val mitja: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
+              </div>
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th>Participants</th>
+                          <th>Valoració</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      ${filteredMembers.map(member => `
+                          <tr>
+                              <td>${member.esportista_dni}</td>
+                              <td>${member.valoracio}</td>
+                          </tr>
+                      `).join('')}
+                  </tbody>
+              </table>
+              <div class="session-footer">
+                  <div class="session-footer-row">
+                      <button id="add-member-${sessio.id}" class="btn btn-success small" onclick="mostrarInscripcio(${sessio.id})">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}</button>
+                      <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button>
+                  </div>
+                  <div class="session-footer-row">
+                      <button id="add-member-${sessio.id}" class="btn btn-danger small">Eliminar Participants</button> <!--todo-->
+                      <button id="del-m-${sessio.id}" class="btn btn-danger small" onclick="confirmDelete(${sessio.id})">Eliminar Sessió</button>
+                  </div>
+              </div>
+          </div>
+      `;
   });
-
-  tableHTML += `
-      </tbody>
-    </table>
-  `;
-  table.innerHTML = tableHTML;
 }
 
 /**
@@ -133,26 +102,54 @@ function updateLimit(id, inscrits) {
 
 
 function loadSessions() {
-    fetch('http://localhost:3000/api/sessions')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to fetch sessions');
-            }
-            return response.json();
-        })
-        .then(data => {
-            allSessions = data;
-            console.log(data);
-            renderTable(allSessions);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('table').innerHTML =
-                `<p class="text-danger">Error al carregar les sessions.</p>`;
-        });
+  fetch('http://localhost:3000/api/sessions')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch sessions');
+      }
+      return response.json();
+    })
+    .then(data => {
+      loadMembers(data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('table').innerHTML =
+        `<p class="text-danger">Error al carregar les sessions.</p>`;
+    });
 }
 
+function loadMembers(sessions) {
+  fetch(`http://localhost:3000/api/entrenaments/`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch members');
+      }
+      return response.json();
+    })
+    .then(members => {
+      // Per cada sessió, obtenir la valoració de forma paral·lela
+      const valoracionsPromises = sessions.map(sessio =>
+        loadValoracionsEntrenador(sessio.entrenador)
+          .then(valoracio => {
+            sessio.valMitja = valoracio;
+          })
+      );
 
+      // Quan totes les valoracions estiguin carregades
+      Promise.all(valoracionsPromises).then(() => {
+        renderTable(sessions, members);
+      });
+    })
+    .then(data => {
+      renderTable(sessions, data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('table').innerHTML =
+        `<p class="text-danger">Error al carregar els membres.</p>`;
+    });
+}
 
 function loadAvailableSessions() {
     const disciplina = document.getElementById('filtreDisciplina').value;
@@ -184,12 +181,32 @@ function loadAvailableSessions() {
         });
 }
 
+async function loadValoracionsEntrenador(dni) {
+  let url = `http://localhost:3000/api/sessions/valoracions/entrenador/${dni}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Error carregant les valoracions mitjanes');
+
+    const data = await res.json();
+
+    if (data.length === 0) return 0;
+
+    const total = data.reduce((sum, val) => sum + val, 0);
+    const mitjana = total / data.length;
+
+    return mitjana;
+  } catch (err) {
+    console.error('Error:', err);
+    return null; // o -1 si vols indicar error
+  }
+}
+
 //todo tot cap abaix!!
 
 
-function goToUpdate(dni) {
-    window.location.href = `update.html?dni=${dni}`;
-  }
+function goToUpdate(id) {
+    window.location.href = `updateSessio.html?id=${id}`;
+}
 
 
 function setupSearch() {
@@ -207,8 +224,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSessions();
     //setupSearch();
     // Botons de filtratge
-    document.getElementById('mostrarDisponibles').addEventListener('click', loadAvailableSessions);
-    document.getElementById('mostrarTotes').addEventListener('click', loadSessions);
+    //document.getElementById('mostrarDisponibles').addEventListener('click', loadAvailableSessions);
+    //document.getElementById('mostrarTotes').addEventListener('click', loadSessions);
 });
 
 
