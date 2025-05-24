@@ -176,3 +176,4 @@ conn.commit()
 print("S'han afegit els entrenaments.")
 
 c.close()
+conn.close()
