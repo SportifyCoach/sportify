@@ -98,7 +98,7 @@ registreForm.addEventListener('submit', (e) => {
 
     const dni = document.getElementById('dni').value;
     const nom = document.getElementById('nom').value;
-    const cognoms = document.getElementById('cognoms').value;
+    const cognom = document.getElementById('cognom').value;
     const tlf = document.getElementById('tlf').value;
     const email = document.getElementById('email').value;
 
@@ -108,7 +108,7 @@ registreForm.addEventListener('submit', (e) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ dni, nom, cognoms, tlf, email}),
+        body: JSON.stringify({ dni, nom, cognom, tlf, email}),
     })
     .then(response => {
         if (!response.ok) throw new Error('Error al afegir esportista');
@@ -170,6 +170,7 @@ cancelarDelete.addEventListener("click", () => {
 
 tancarPopupDelete.addEventListener("click", () => {
     popupFonsDelete.style.display = "none";
+    missatge.textContent = '';
     dniAEliminar = null;
 });
 
