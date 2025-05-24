@@ -3,7 +3,7 @@ const { getPool } = require('../db');
 
 class SessioRepository {
   async findAll() {
-    const [rows] = await getPool().query('SELECT * FROM sessio ORDER BY date ASC');
+    const [rows] = await getPool().query('SELECT * FROM sessio ORDER BY date DESC');
     return rows;
   }
 

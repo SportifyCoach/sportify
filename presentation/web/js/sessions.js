@@ -44,7 +44,7 @@ function renderTable(sessions, members) {
                       ${filteredMembers.map(member => `
                           <tr>
                               <td>${member.esportista_dni}</td>
-                              <td>${member.valoracio}</td>
+                              <td>${member.valoracio ? member.valoracio : '-'}</td>
                           </tr>
                       `).join('')}
                   </tbody>
@@ -63,43 +63,6 @@ function renderTable(sessions, members) {
       `;
   });
 }
-
-/**
- * Llegeix el valor de l'input i fa PUT a /api/sessions/:id/limit
- * @param {number} id       - ID de la sessió
- * @param {number} inscrits - número actual d'inscrits (limit ≥ inscrits)
- */
-function updateLimit(id, inscrits) {
-  const input = document.getElementById(`limit-${id}`);
-  const nouLimit = parseInt(input.value, 10);
-
-  if (isNaN(nouLimit) || nouLimit < inscrits) {
-    return alert(`El límit ha de ser un nombre ≥ ${inscrits}.`);
-  }
-
-  fetch(`http://localhost:3000/api/sessions/${id}/limit`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ newLimit: nouLimit })
-  })
-  .then(res => {
-    if (!res.ok) {
-      return res.json().then(err => { throw new Error(err.error || res.statusText); });
-    }
-    return res.json();
-  })
-  .then(() => {
-    alert('Límit de participants actualitzat!');
-    // refresca la taula
-    if (typeof loadData === 'function') loadData();
-    else if (typeof loadSessions === 'function') loadSessions();
-  })
-  .catch(err => {
-    alert(`Error actualitzant límit: ${err.message}`);
-  });
-}
-
-
 
 function loadSessions() {
   fetch('http://localhost:3000/api/sessions')

@@ -6,7 +6,6 @@ const esportistesRouter = require('./presentation/server/routes/esportistes.rout
 const entrenadorsRouter  = require('./presentation/server/routes/entrenadors.routes.js');
 const sessionsRouter = require('./presentation/server/routes/sessions.routes.js');
 const entrenamentsRouter = require('./presentation/server/routes/entrenaments.routes.js');
-const inscripcionsRouter = require('./presentation/server/routes/inscripcions.routes');
 const disciplinesRouter = require('./presentation/server/routes/disciplines.routes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger');
@@ -23,7 +22,6 @@ app.use('/api/esportistes', esportistesRouter);
 app.use('/api/entrenadors', entrenadorsRouter);
 app.use('/api/sessions', sessionsRouter);
 app.use('/api/entrenaments', entrenamentsRouter);
-app.use('/api/inscripcions', inscripcionsRouter);
 app.use('/api/disciplines', disciplinesRouter);
 
 /* ---------- Gestió d'errors ---------- */
