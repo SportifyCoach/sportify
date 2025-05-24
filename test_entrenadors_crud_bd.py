@@ -43,7 +43,9 @@ if opt.init:
                 cognoms VARCHAR(70) NOT NULL,
                 email VARCHAR(120) NOT NULL UNIQUE,
                 especialitat VARCHAR(80) NOT NULL,
-                experiencia INT NOT NULL
+                experiencia INT NOT NULL,
+                status varchar(30),
+                reason_denial TEXT
             );
         """)
     except:
@@ -58,7 +60,9 @@ if opt.init:
                     cognoms VARCHAR(70) NOT NULL,
                     email VARCHAR(120) NOT NULL UNIQUE,
                     especialitat VARCHAR(80) NOT NULL,
-                    experiencia INT NOT NULL
+                    experiencia INT NOT NULL,
+                    status varchar(30),
+                    reason_denial TEXT
                 );
             """)
     conn.commit()

@@ -355,3 +355,15 @@ form button:hover {
 
 /* Petit utilitari de marge (bootstrappish) */
 .mt-2 { margin-top: 0.5rem; }
+
+.radio {
+    display: flex;
+    flex-direction: horizontal;
+    align-items: center;
+    gap: 2px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 10px;
+}

@@ -38,7 +38,17 @@
 
         <label for="experiencia">Experiència:</label>
         <input type="text" id="experiencia" required><br><br>
-
+        <div class="radio-container">
+          <label for="status">Estat:</label>
+          <div id="status" class="radio-group">
+            <label class="radio"><input type="radio" id="status_a" name="status" value="approved" required>
+              Aprovat</label>
+            <label class="radio"><input type="radio" id="status_d" name="status" value="denied" required>
+              Denegat</label>
+        </div><br>
+        <label for="reason_denial">Motiu de rebuig:</label>
+        <label><input type="text" id="reason_denial"></label>
+        <br><br>
         <button type="submit">Guardar</button>
       </form>
     </div>

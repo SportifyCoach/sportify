@@ -11,8 +11,8 @@ class EntrenadorService {
     return new Entrenador(doc);
   }
 
-  async updateContact(dni, { especialitat, experiencia }) {
-    const upd = await repo.update(dni, { especialitat, experiencia });
+  async updateContact(dni, { especialitat, experiencia, status, reason_denial }) {
+    const upd = await repo.update(dni, { especialitat, experiencia, status, reason_denial });
     if (!upd) throw new Error('Entrenador no trobat');
     return new Entrenador(upd);
   }

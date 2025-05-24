@@ -38,9 +38,9 @@ function renderTable(llista) {
           <tr>
             <td>${e.dni}</td>
             <td style="color: ${
-              e.status === 'aprobado'   ? 'green'  :
-              e.status === 'rechazado'  ? 'red'    :
-              /* per defecte: pendent */         'goldenrod'
+              e.status === 'approved'   ? '#1dcc25'  :
+              e.status === 'denied'  ? '#d9534f'    :
+              /* per defecte: pendent */         '#75aaff'
             }">${e.nom}</td>
             <td>${e.cognoms}</td>
             <td>${e.email}</td>
@@ -52,16 +52,6 @@ function renderTable(llista) {
                       onclick="confirmDeleteEntrenador('${e.dni}')">
                 Eliminar
               </button>
-              <div class="dropdown">
-                <div class="dropdown-content">
-                  <button onclick="validateEntrenador('${e.dni}', 'aprobado')">
-                    Aprovar
-                  </button>
-                  <button onclick="validateEntrenador('${e.dni}', 'rechazado')">
-                    Rebutjar
-                  </button>
-                </div>
-              </div>
             </td>
           </tr>
         `).join('')}
@@ -72,9 +62,9 @@ function renderTable(llista) {
 
 // 2) Afegim la funció que crida l'API de validació
 async function validateEntrenador(dni, nouEstat) {
-  let payload = { approved: nouEstat === 'aprobado' };
+  let payload = { approved: nouEstat === 'aproved' };
   // si es rebutjat, demanem motiu
-  if (nouEstat === 'rechazado') {
+  if (nouEstat === 'denied') {
     const motiu = prompt('Motiu de rebuig:');
     if (motiu === null) return; // l’usuari ha cancel·lat
     payload.motivo = motiu;

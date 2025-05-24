@@ -1,6 +1,6 @@
 class Entrenador {
   constructor({ 
-    dni, nom, cognoms, email, especialitat, experiencia, status, motivo_rebuig 
+    dni, nom, cognoms, email, especialitat, experiencia, status, reason_denial 
   }) {
     this.dni           = dni;
     this.nom           = nom;
@@ -9,7 +9,7 @@ class Entrenador {
     this.especialitat  = especialitat;
     this.experiencia   = experiencia;
     this.status        = status   || 'pendent';
-    this.motivo_rebuig = motivo_rebuig || null;
+    this.reason_denial = reason_denial || null;
   }
 }
 
