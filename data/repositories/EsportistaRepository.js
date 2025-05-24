@@ -16,11 +16,11 @@ class EsportistaRepository {
   }
 
   async create(data) {
-    const { dni, tlf, email } = data;
+    const { dni, nom, cognom, tlf, email } = data;
     await getPool().query(
-      `INSERT INTO esportista (dni, tlf, email)
-       VALUES (:dni, :tlf, :email)`,
-      { dni, tlf, email },
+      `INSERT INTO esportista (dni, nom, cognom, tlf, email)
+       VALUES (:dni, :nom, :cognom, :tlf, :email)`,
+      { dni, nom, cognom, tlf, email },
     );
     return this.findByDni(dni);
   }
