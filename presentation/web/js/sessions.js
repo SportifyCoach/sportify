@@ -31,7 +31,7 @@ function renderTable(sessions, members) {
           <div class="session">
               <div class="session-title">
                   <span> <strong> ${sessio.disciplina} </strong> - ${sessio.date}  </span> 
-                  <span> <strong> Entrenador: </strong> ${sessio.entrenador} - <strong>Val entrenador: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
+                  <span> <strong> Entrenador: </strong> ${sessio.entrenador} - <strong>Val. entrenador: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
               </div>
               <table class="table">
                   <thead>
