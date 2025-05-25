@@ -27,11 +27,11 @@ for table in tables:
 conn.commit()
 
 try:
-    subprocess.run(["python3", "test_disciplines_crud_bd.py", "-i"], check=True)
-    subprocess.run(["python3", "test_entrenadors_crud_bd.py", "-i"], check=True)
-    subprocess.run(["python3", "test_esportistes_crud_bd.py", "-i"], check=True)
-    subprocess.run(["python3", "test_sessions_crud_bd.py", "-i"], check=True)
-    subprocess.run(["python3", "test_entrenaments_crud_bd.py", "-i"], check=True)
+    subprocess.run(["python3", "scripts/test_disciplines_crud_bd.py", "-i"], check=True)
+    subprocess.run(["python3", "scripts/test_entrenadors_crud_bd.py", "-i"], check=True)
+    subprocess.run(["python3", "scripts/test_esportistes_crud_bd.py", "-i"], check=True)
+    subprocess.run(["python3", "scripts/test_sessions_crud_bd.py", "-i"], check=True)
+    subprocess.run(["python3", "scripts/test_entrenaments_crud_bd.py", "-i"], check=True)
 except subprocess.CalledProcessError as e:
     print(f"Error: {e}")
 
@@ -91,11 +91,11 @@ print("S'han afegit els entrenadors.")
 tabname = "esportista";
 
 esportistes = [
-        ("12345678A", "Marc", "Garcia", "612345678", "marc.garcia@email.com"),
-        ("23456789B", "Laura", "Fernandez", "622345678", "laura.fernandez@email.com"),
-        ("34567890C", "Joan", "Martínez", "632345678", "joan.martinez@email.com"),
-        ("45678901D", "Anna", "Sánchez", "642345678", "anna.sanchez@email.com"),
-        ("56789012E", "David", "Lopez", "652345678", "david.lopez@email.com"),
+        ("12345876A", "Marc", "Garcia", "612345678", "marc.garcia@email.com"),
+        ("23456987B", "Laura", "Fernandez", "622345678", "laura.fernandez@email.com"),
+        ("34567098C", "Joan", "Martínez", "632345678", "joan.martinez@email.com"),
+        ("45678109D", "Anna", "Sánchez", "642345678", "anna.sanchez@email.com"),
+        ("56789210E", "David", "Lopez", "652345678", "david.lopez@email.com"),
     ]
 for e in esportistes:
     try:
