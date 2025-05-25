@@ -1,4 +1,5 @@
 /* CRUD MySQL pur (taula `entrenament`) */
+const { NONE } = require('sequelize');
 const { getPool } = require('../db');
 
 class EntrenamentRepository {
@@ -25,11 +26,11 @@ class EntrenamentRepository {
   }
 
   async create(data) {
-    const { valoracio, sessio_id, esportista_dni } = data;
-    await getPool().query(
-      `INSERT INTO entrenament (valoracio, sessio_id, esportista_dni)
-       VALUES (:valoracio, :sessio_id, :esportista_dni)`,
-      { valoracio, sessio_id, esportista_dni },
+    const { sessio_id, esportista_dni } = data;
+    const [result] = await getPool().query(
+      `INSERT INTO entrenament (sessio_id, esportista_dni)
+       VALUES (:sessio_id, :esportista_dni)`,
+      { sessio_id, esportista_dni },
     );
     const newId = result.insertId;
     return this.findById(newId);

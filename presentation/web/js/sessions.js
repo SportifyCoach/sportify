@@ -31,7 +31,7 @@ function renderTable(sessions, members) {
           <div class="session">
               <div class="session-title">
                   <span> <strong> ${sessio.disciplina} </strong> - ${sessio.date}  </span> 
-                  <span> <strong> Entrenador: </strong> ${sessio.entrenador} <strong>Val mitja: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
+                  <span> <strong> Entrenador: </strong> ${sessio.entrenador} - <strong>Val entrenador: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
               </div>
               <table class="table">
                   <thead>
@@ -51,7 +51,21 @@ function renderTable(sessions, members) {
               </table>
               <div class="session-footer">
                   <div class="session-footer-row">
-                      <button id="add-member-${sessio.id}" class="btn btn-success small" onclick="mostrarInscripcio(${sessio.id})">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}</button>
+                      <button id="add-member-${sessio.id}" class="btn btn-success small" onclick="
+                        (function() {
+                          const parts = '${sessio.date}'.split('/');
+                          const sessioDate = new Date(parts[2], parts[1] - 1, parts[0]);
+                          const now = new Date();
+                          if (sessioDate <= now) {
+                            tooLate(${sessio.id});
+                          } else {
+                            ${filteredMembers.length == sessio.limit_persones
+                              ? `noMoreSpace(${sessio.id});`
+                              : `mostrarInscripcio(${sessio.id});`
+                            }
+                          }
+                        })()">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}
+                      </button>
                       <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button>
                   </div>
                   <div class="session-footer-row">
@@ -108,40 +122,39 @@ function loadMembers(sessions) {
       renderTable(sessions, data);
     })
     .catch(error => {
-      console.error('Error:', error);
       document.getElementById('table').innerHTML =
         `<p class="text-danger">Error al carregar els membres.</p>`;
     });
 }
 
 function loadAvailableSessions() {
-    const disciplina = document.getElementById('filtreDisciplina').value;
-    const entrenador = document.getElementById('filtreEntrenador').value;
+  const disciplina = document.getElementById('filtreDisciplina').value;
+  const entrenador = document.getElementById('filtreEntrenador').value;
 
-    let url = 'http://localhost:3000/api/sessions/disponibles';
-    const params = new URLSearchParams();
+  let url = 'http://localhost:3000/api/sessions/disponibles';
+  const params = new URLSearchParams();
 
-    if (disciplina) params.append('disciplina', disciplina);
-    if (entrenador) params.append('entrenador', entrenador);
+  if (disciplina) params.append('disciplina', disciplina);
+  if (entrenador) params.append('entrenador', entrenador);
 
-    if (params.toString()) {
-        url += '?' + params.toString();
-    }
+  if (params.toString()) {
+    url += '?' + params.toString();
+  }
 
-    fetch(url)
-        .then(res => {
-            if (!res.ok) throw new Error('Error carregant sessions disponibles');
-            return res.json();
-        })
-        .then(data => {
-            allSessions = data;
-            renderTable(data);
-        })
-        .catch(err => {
-            console.error('Error:', err);
-            document.getElementById('table').innerHTML =
-                `<p class="text-danger">Error al carregar les sessions disponibles.</p>`;
-        });
+  fetch(url)
+    .then(res => {
+      if (!res.ok) throw new Error('Error carregant sessions disponibles');
+      return res.json();
+    })
+    .then(data => {
+      allSessions = data;
+      renderTable(data);
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      document.getElementById('table').innerHTML =
+        `<p class="text-danger">Error al carregar les sessions disponibles.</p>`;
+    });
 }
 
 async function loadValoracionsEntrenador(dni) {
@@ -152,10 +165,13 @@ async function loadValoracionsEntrenador(dni) {
 
     const data = await res.json();
 
-    if (data.length === 0) return 0;
+    // Filtra valors invàlids: null, undefined o menors que 1
+    const valids = data.filter(val => val !== null && val !== undefined && val >= 1);
 
-    const total = data.reduce((sum, val) => sum + val, 0);
-    const mitjana = total / data.length;
+    if (valids.length === 0) return 0;
+
+    const total = valids.reduce((sum, val) => sum + val, 0);
+    const mitjana = total / valids.length;
 
     return mitjana;
   } catch (err) {
@@ -164,41 +180,38 @@ async function loadValoracionsEntrenador(dni) {
   }
 }
 
-//todo tot cap abaix!!
-
-
 function goToUpdate(id) {
-    window.location.href = `updateSessio.html?id=${id}`;
+  window.location.href = `updateSessio.html?id=${id}`;
 }
 
 
 function setupSearch() {
-    const searchInput = document.getElementById('search-bar');
-    searchInput.addEventListener('input', () => {
-        const query = searchInput.value.trim().toLowerCase();
-        const filtered = allEsportistes.filter(e =>
-            e.dni.toLowerCase().includes(query)
-        );
-        renderTable(filtered);
-    });
+  const searchInput = document.getElementById('search-bar');
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
+    const filtered = allEsportistes.filter(e =>
+      e.dni.toLowerCase().includes(query)
+    );
+    renderTable(filtered);
+  });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadSessions();
-    //setupSearch();
-    // Botons de filtratge
-    //document.getElementById('mostrarDisponibles').addEventListener('click', loadAvailableSessions);
-    //document.getElementById('mostrarTotes').addEventListener('click', loadSessions);
+  loadSessions();
+  //setupSearch();
+  // Botons de filtratge
+  //document.getElementById('mostrarDisponibles').addEventListener('click', loadAvailableSessions);
+  //document.getElementById('mostrarTotes').addEventListener('click', loadSessions);
 });
 
 
 obrirPopupSessio.addEventListener("click", () => popupFonsSessio.style.display = "flex");
-  
+
 tancarPopupSessio.addEventListener("click", () => popupFonsSessio.style.display = "none");
-  
-  // Tancar fent clic fora del formulari
+
+// Tancar fent clic fora del formulari
 window.addEventListener("click", (e) => {
-    if (e.target === popupFonsSessio) popupFonsSessio.style.display = "none";
+  if (e.target === popupFonsSessio) popupFonsSessio.style.display = "none";
 });
 
 
@@ -207,23 +220,23 @@ const missatge = document.getElementById('missatge');
 
 
 function confirmDelete(id) {
-    sessioAEliminar = id;
-    textConfirmacioSessio.textContent = `Estàs segur que vols eliminar la sessió amb ID ${id}?`;
-    popupFonsDeleteSessio.style.display = "flex";
+  sessioAEliminar = id;
+  textConfirmacioSessio.textContent = `Estàs segur que vols eliminar la sessió amb ID ${id}?`;
+  popupFonsDeleteSessio.style.display = "flex";
 }
 
 confirmarDeleteSessio.addEventListener("click", () => {
-    if (!sessioAEliminar) return;
-  
-    fetch(`http://localhost:3000/api/sessions/${sessioAEliminar}`, {
-      method: 'DELETE'
-    })
+  if (!sessioAEliminar) return;
+
+  fetch(`http://localhost:3000/api/sessions/${sessioAEliminar}`, {
+    method: 'DELETE'
+  })
     .then(response => {
       if (!response.ok) throw new Error("No s'ha pogut eliminar la sessió");
       return response.text();
     })
     .then(() => {
-        popupFonsDeleteSessio.style.display = "none";
+      popupFonsDeleteSessio.style.display = "none";
       sessioAEliminar = null;
       loadSessions(); // ← refresca la taula
     })
@@ -232,23 +245,23 @@ confirmarDeleteSessio.addEventListener("click", () => {
       popupFonsDeleteSessio.style.display = "none";
       sessioAEliminar = null;
     });
-  });
+});
 
-  cancelarDeleteSessio.addEventListener("click", () => {
-    popupFonsDeleteSessio.style.display = "none";
-    sessioAEliminar = null;
+cancelarDeleteSessio.addEventListener("click", () => {
+  popupFonsDeleteSessio.style.display = "none";
+  sessioAEliminar = null;
 });
 
 tancarPopupDeleteSessio.addEventListener("click", () => {
-    popupFonsDeleteSessio.style.display = "none";
-    sessioAEliminar = null;
+  popupFonsDeleteSessio.style.display = "none";
+  sessioAEliminar = null;
 });
 
 window.addEventListener("click", (e) => {
-    if (e.target === popupFonsDeleteSessio) {
-        popupFonsDeleteSessio.style.display = "none";
-        sessioAEliminar = null;
-    }
+  if (e.target === popupFonsDeleteSessio) {
+    popupFonsDeleteSessio.style.display = "none";
+    sessioAEliminar = null;
+  }
 });
 
 let sessioAInscriure = null;
@@ -256,8 +269,28 @@ let sessioAInscriure = null;
 function mostrarInscripcio(sessioId) {
   sessioAInscriure = sessioId;
   document.getElementById('textSessioInscripcio').textContent = `Inscripció a la sessió ID ${sessioId}`;
+  document.getElementById('dniInscripcio').style.display = '';
+  document.getElementById('confirmarInscripcio').style.display = '';
   document.getElementById('dniInscripcio').value = '';
   document.getElementById('missatgeInscripcio').textContent = '';
+  document.getElementById('popupInscripcio').style.display = 'flex';
+}
+
+function tooLate(sessioId) {
+  document.getElementById('missatgeInscripcio').style.color = 'red';
+  document.getElementById('missatgeInscripcio').textContent = 'La data d\'aquesta sessió ja ha passat.';
+  document.getElementById('textSessioInscripcio').textContent = `Inscripció a la sessió ID ${sessioId}`;
+  document.getElementById('dniInscripcio').style.display = 'none';
+  document.getElementById('confirmarInscripcio').style.display = 'none';
+  document.getElementById('popupInscripcio').style.display = 'flex';
+}
+
+function noMoreSpace(sessioId) {
+  document.getElementById('missatgeInscripcio').style.color = 'red';
+  document.getElementById('missatgeInscripcio').textContent = 'No hi ha més espai per a inscriure\'s a aquesta sessió.';
+  document.getElementById('textSessioInscripcio').textContent = `Inscripció a la sessió ID ${sessioId}`;
+  document.getElementById('dniInscripcio').style.display = 'none';
+  document.getElementById('confirmarInscripcio').style.display = 'none';
   document.getElementById('popupInscripcio').style.display = 'flex';
 }
 
@@ -269,10 +302,10 @@ document.getElementById('confirmarInscripcio').addEventListener('click', () => {
   const dni = document.getElementById('dniInscripcio').value;
   const missatge = document.getElementById('missatgeInscripcio');
 
-  fetch('http://localhost:3000/api/inscripcions', {
+  fetch('http://localhost:3000/api/entrenaments', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ esportista_dni: dni, sessio_id: sessioAInscriure }),
+    body: JSON.stringify({ sessio_id: sessioAInscriure, esportista_dni: dni }),
   })
     .then(res => {
       if (!res.ok) return res.json().then(err => { throw new Error(err.error) });
@@ -287,45 +320,10 @@ document.getElementById('confirmarInscripcio').addEventListener('click', () => {
       }, 1500);
     })
     .catch(err => {
+      console.log('Error:', err);
       missatge.style.color = 'red';
-      missatge.textContent = err.message;
+      missatge.textContent = 'Error al realitzar la inscripció';
     });
 });
 
 let sessioAConsultar = null;
-
-function mostrarInscrits(id) {
-  sessioAConsultar = id;
-  document.getElementById('llistaInscrits').innerHTML = '';
-  document.getElementById('missatgeInscrits').textContent = '';
-  document.getElementById('dniEntrenadorCheck').value = '';
-  document.getElementById('textInscritsSessio').textContent = `Sessió ID: ${id}`;
-  document.getElementById('popupInscrits').style.display = 'flex';
-}
-
-document.getElementById('tancarPopupInscrits').addEventListener('click', () => {
-  document.getElementById('popupInscrits').style.display = 'none';
-});
-
-document.getElementById('verificarEntrenador').addEventListener('click', () => {
-  const dni = document.getElementById('dniEntrenadorCheck').value;
-
-  fetch(`http://localhost:3000/api/inscripcions/${sessioAConsultar}?dni=${dni}`)
-    .then(res => {
-      if (!res.ok) return res.json().then(err => { throw new Error(err.error) });
-      return res.json();
-    })
-    .then(data => {
-      const list = document.getElementById('llistaInscrits');
-      list.innerHTML = '';
-      data.forEach(e => {
-        const li = document.createElement('li');
-        li.textContent = `${e.nom} ${e.cognom} (${e.dni})`;
-        list.appendChild(li);
-      });
-    })
-    .catch(err => {
-      document.getElementById('missatgeInscrits').style.color = 'red';
-      document.getElementById('missatgeInscrits').textContent = err.message;
-    });
-});
