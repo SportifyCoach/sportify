@@ -17,7 +17,7 @@ DB_CONFIG = {
 
 DISCIPLINES = [ 'bàsquet', 'futbol', 'rugbi', 'atletisme', 'natació', 'handbol' ]
 
-def seed_sessions(count=50):
+def seed_sessions(count=10):
     fake = Faker('es_ES')
     conn = None
     cursor = None
@@ -84,7 +84,7 @@ def seed_sessions(count=50):
             # Tria sense repetició
             participants = random.sample(esportistes, k=num_part)
             for dni in participants:
-                valoracio = fake.random_int(min=1, max=5)
+                valoracio = fake.random_int(min=1, max=10)
                 cursor.execute(insert_participant_sql, (
                     sessio_id,
                     dni,
