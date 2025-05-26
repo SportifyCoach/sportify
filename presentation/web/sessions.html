@@ -30,16 +30,13 @@
             </div>
         </div>
         <div class="container">
-            <div id="popupFonsSessio" class="popup-fons">
+            <div id="popupFons" class="popup-fons">
                 <div class="popup">
                     <span class="tancar-popup" id="tancarPopupSessio">&times;</span>
                     <h2>Registrar Sessió</h2>
-                    <form id="registreSessioForm">
-                        <label for="data">Data:</label>
-                        <input type="date" id="data" name="data" required>
-
-                        <label for="hora">Hora:</label>
-                        <input type="time" id="hora" name="hora" required>
+                    <form id="registreForm">
+                        <label for="datetime">Data i hora:</label>
+                        <input type="datetime-local" id="datetime" name="datetime" required>
 
                         <label for="limit_persones">Límit participants:</label>
                         <input type="number" id="limit_persones" name="limit_persones" required>

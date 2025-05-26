@@ -8,7 +8,7 @@ const cancelarDeleteSessio = document.getElementById("cancelarDeleteSessio");
 const textConfirmacioSessio = document.getElementById("textConfirmacioSessio");
 
 const obrirPopupSessio = document.getElementById("obrirPopupSessio");
-const popupFonsSessio = document.getElementById("popupFonsSessio");
+const popupFons = document.getElementById("popupFons");
 const tancarPopupSessio = document.getElementById("tancarPopupSessio");
 
 
@@ -60,9 +60,9 @@ function renderTable(sessions, members) {
                             tooLate(${sessio.id});
                           } else {
                             ${filteredMembers.length == sessio.limit_persones
-                              ? `noMoreSpace(${sessio.id});`
-                              : `mostrarInscripcio(${sessio.id});`
-                            }
+        ? `noMoreSpace(${sessio.id});`
+        : `mostrarInscripcio(${sessio.id});`
+      }
                           }
                         })()">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}
                       </button>
@@ -127,36 +127,6 @@ function loadMembers(sessions) {
     });
 }
 
-function loadAvailableSessions() {
-  const disciplina = document.getElementById('filtreDisciplina').value;
-  const entrenador = document.getElementById('filtreEntrenador').value;
-
-  let url = 'http://localhost:3000/api/sessions/disponibles';
-  const params = new URLSearchParams();
-
-  if (disciplina) params.append('disciplina', disciplina);
-  if (entrenador) params.append('entrenador', entrenador);
-
-  if (params.toString()) {
-    url += '?' + params.toString();
-  }
-
-  fetch(url)
-    .then(res => {
-      if (!res.ok) throw new Error('Error carregant sessions disponibles');
-      return res.json();
-    })
-    .then(data => {
-      allSessions = data;
-      renderTable(data);
-    })
-    .catch(err => {
-      console.error('Error:', err);
-      document.getElementById('table').innerHTML =
-        `<p class="text-danger">Error al carregar les sessions disponibles.</p>`;
-    });
-}
-
 async function loadValoracionsEntrenador(dni) {
   let url = `http://localhost:3000/api/sessions/valoracions/entrenador/${dni}`;
   try {
@@ -205,18 +175,51 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-obrirPopupSessio.addEventListener("click", () => popupFonsSessio.style.display = "flex");
-
-tancarPopupSessio.addEventListener("click", () => popupFonsSessio.style.display = "none");
+obrirPopupSessio.addEventListener("click", () => popupFons.style.display = "flex");
+tancarPopupSessio.addEventListener("click", () => popupFons.style.display = "none");
 
 // Tancar fent clic fora del formulari
 window.addEventListener("click", (e) => {
-  if (e.target === popupFonsSessio) popupFonsSessio.style.display = "none";
+  if (e.target === popupFons) popupFons.style.display = "none";
 });
 
 
 const registreForm = document.getElementById('registreForm');
 const missatge = document.getElementById('missatge');
+
+registreForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const date = document.getElementById('datetime').value;
+  const limit_persones = document.getElementById('limit_persones').value;
+  const disciplina = document.getElementById('disciplina').value;
+  const entrenador = document.getElementById('entrenador').value;
+
+  // Enviament de dades al servidor
+  fetch('http://localhost:3000/api/sessions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ date, limit_persones, disciplina, entrenador }),
+  })
+    .then(response => {
+      if (!response.ok) throw new Error('Error al afegir la sessió');
+      return response.text();
+    })
+    .then(msg => {
+      missatge.style.color = 'green';
+      missatge.textContent = msg;
+      registreForm.reset();
+      popupFons.style.display = 'none';
+      loadSessions();
+    })
+    .catch(err => {
+      console.log(err);
+      missatge.style.color = 'red';
+      missatge.textContent = err.message;
+    });
+});
 
 
 function confirmDelete(id) {
