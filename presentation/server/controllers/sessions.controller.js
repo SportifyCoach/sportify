@@ -65,4 +65,26 @@ exports.getValoracionsPerEntrenador = async (req, res, next) => {
   } catch (e) { next(e); }
 };
 
+exports.rateSession = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { valoracio } = req.body;
+    const updated = await service.rateSession(id, valoracio);
+    res.json(updated);
+  } catch (e) {
+    next(e);
+  }
+};
+
+
+exports.removeRating = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updated = await service.removeRating(id);
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+};
+
 

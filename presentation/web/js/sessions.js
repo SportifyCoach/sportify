@@ -29,14 +29,16 @@ function renderTable(sessions, members) {
     sessio.disciplina = sessio.disciplina.toUpperCase();
 
     table.innerHTML += `
-          <div class="session">
+          <div class="session" id="session-${sessio.id}">
               <div class="session-title">
                   <span> <strong> ${sessio.disciplina} </strong> - ${formattedDate}  </span> 
-                  <span> <strong> Entrenador/a: </strong> ${sessio.entrenadorNom} - <strong>Val. entrenador: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
+                  <span class="session-rating"><strong>Valoració:</strong> ${sessio.valoracio ?? '- '}/10</span>
+                  <span> <strong> Entrenador/a: </strong> ${sessio.entrenadorName}</span>
               </div>
+
               <table class="table">
                   <thead>
-                      <tr>
+                      <tr id="session-<%= sessio.id %>">
                           <th>Participants</th>
                           <th>Valoració</th>
                       </tr>
@@ -67,6 +69,19 @@ function renderTable(sessions, members) {
                           }
                         })()">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}
                       </button>
+                      <button id="rate-sessio-${sessio.id}"
+                              class="btn btn-primary small"
+                              style="background-color:#8b5cf6; display:block; margin-bottom:.5em;"
+                              onclick="rateSession(${sessio.id})">
+                        Valorar Sessió
+                      </button>
+                      <button id="remove-rating-${sessio.id}"
+                              class="btn btn-primary small"
+                              style="background-color:#c4b5fd; display:block;"
+                              onclick="removeRating(${sessio.id})">
+                        Eliminar valoració
+                      </button>
+
                       <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button>
                   </div>
                   <div class="session-footer-row">
@@ -462,5 +477,50 @@ document.addEventListener('DOMContentLoaded', () => {
       .addEventListener('input', applyFilters);
   });
 });
+
+
+function rateSession(id) {
+  const entrada = prompt('Introdueix valoració (1–10):');
+  if (entrada === null) return;
+  const v = parseInt(entrada, 10);
+  if (isNaN(v) || v < 1 || v > 10) {
+    return alert('Valoració invàlida');
+  }
+
+  fetch(`http://localhost:3000/api/sessions/${id}/valoracio`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ valoracio: v })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Error en el servidor');
+    return res.json();
+  })
+  .then(updated => {
+    const span = document.querySelector(`#session-${id} .session-rating`);
+    if (span) span.textContent = `Valoració: ${updated.valoracio}/10`;
+  })
+  .catch(err => alert(err.message));
+}
+
+function removeRating(id) {
+  if (!confirm('Segur que vols eliminar la valoració de la sessió?')) return;
+  fetch(`/api/sessions/${id}/valoracio`, {
+    method: 'DELETE',
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Error en el servidor');
+      return res.json();
+    })
+    .then(() => {
+      const span = document.querySelector(`#session-${id} .session-rating`);
+      if (span) {
+        span.textContent = 'Valoració: -/10';
+        span.dataset.rating = 0;
+      }
+    })
+    .catch(err => alert(err.message));
+}
+
 
 let sessioAConsultar = null;

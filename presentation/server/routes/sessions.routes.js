@@ -14,5 +14,8 @@ router.delete('/:id', ctrl.remove);
 //router.delete('/:dni', ctrl.remove); 
 router.put('/:id',        ctrl.update);        
 router.put('/:id/limit',  ctrl.updateLimit);   
+router.put('/:id/valoracio', ctrl.rateSession);
+router.put('/:id/valoracio', ctrl.rateSession);
+router.delete('/:id/valoracio', ctrl.removeRating);
 
 module.exports = router;

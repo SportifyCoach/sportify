@@ -43,6 +43,33 @@ class SessioService {
   async getValoracionsPerEntrenador(dni) {
     return await repo.findValoracions(dni);
   }
+
+  async rateSession(id, valoracio) {
+    const val = parseInt(valoracio, 10);
+    if (isNaN(val) || val < 1 || val > 10) {
+      const err = new Error('La valoración debe ser un entero entre 1 y 10');
+      err.status = 400;
+      throw err;
+    }
+    await repo.updateRating(id, val);
+
+    const data = await repo.findById(id);
+    if (!data) {
+      const err = new Error('Sesión no encontrada');
+      err.status = 404;
+      throw err;
+    }
+
+    return new Sessio(data);
+  }
+  async removeRating(id) {
+    const exists = await repo.findById(id);
+    if (!exists) throw new Error('Sessió no trobada');
+  
+    return repo.removeRating(id);
+  }
+  
+
 }
 
 module.exports = new SessioService();

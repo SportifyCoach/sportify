@@ -109,6 +109,32 @@ class SessioRepository {
     const [rows] = await getPool().query(query, {dni});
     return rows.map(row => row.valoracio);
   }
+
+z
+  async updateRating(id, valoracio) {
+    const sql = 'UPDATE sessio SET valoracio = ? WHERE id = ?';
+    await getPool().query(sql, [valoracio, id]);
+  }
+
+
+  async findById(id) {
+    const [rows] = await getPool().query(
+      'SELECT * FROM sessio WHERE id = ?',
+      [id]
+    );
+    return rows[0];
+  }
+
+  async removeRating(id) {
+    await getPool().query(
+      `UPDATE sessio
+         SET valoracio = NULL
+       WHERE id = :id`,
+      { id }
+    );
+    return this.findById(id);
+  }
+
 }
 
 module.exports = new SessioRepository();
