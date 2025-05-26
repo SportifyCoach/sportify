@@ -31,7 +31,7 @@ function renderTable(sessions, members) {
           <div class="session">
               <div class="session-title">
                   <span> <strong> ${sessio.disciplina} </strong> - ${sessio.date}  </span> 
-                  <span> <strong> Entrenador: </strong> ${sessio.entrenador} - <strong>Val. entrenador: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
+                  <span> <strong> Entrenador/a: </strong> ${sessio.entrenadorNom} - <strong>Val. entrenador: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
               </div>
               <table class="table">
                   <thead>
@@ -43,7 +43,7 @@ function renderTable(sessions, members) {
                   <tbody>
                       ${filteredMembers.map(member => `
                           <tr>
-                              <td>${member.esportista_dni}</td>
+                              <td>${member.esportistaName}</td>
                               <td>${member.valoracio ? member.valoracio : '-'}</td>
                           </tr>
                       `).join('')}
@@ -105,25 +105,73 @@ function loadMembers(sessions) {
       return response.json();
     })
     .then(members => {
-      // Per cada sessió, obtenir la valoració de forma paral·lela
-      const valoracionsPromises = sessions.map(sessio =>
-        loadValoracionsEntrenador(sessio.entrenador)
-          .then(valoracio => {
-            sessio.valMitja = valoracio;
-          })
-      );
-
-      // Quan totes les valoracions estiguin carregades
-      Promise.all(valoracionsPromises).then(() => {
-        renderTable(sessions, members);
-      });
-    })
-    .then(data => {
-      renderTable(sessions, data);
+      getAllEntrenadorsNames(sessions, members);
     })
     .catch(error => {
+      console.error('Error:', error);
       document.getElementById('table').innerHTML =
-        `<p class="text-danger">Error al carregar els membres.</p>`;
+        `<p class="text-danger">Error al carregar els participants.</p>`;
+    });
+}
+
+function getAllEsportistesNames(sessions, members) {
+  fetch('http://localhost:3000/api/esportistes')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch esportistes');
+      }
+      return response.json();
+    })
+    .then(esportistes => {
+      members.forEach(member => {
+        const esportista = esportistes.find(e => e.dni === member.esportista_dni);
+        if (esportista) {
+          member.esportistaName = `${esportista.nom} ${esportista.cognom}`;
+        } else {
+          member.esportistaName = 'Esportista no trobat';
+        }
+      });
+    })
+    .then(() => {
+      const promises = sessions.map(async (sessio) => {
+        const valoracio = await loadValoracionsEntrenador(sessio.entrenador);
+        sessio.valMitja = valoracio !== null ? valoracio : 0;
+      });
+      return Promise.all(promises);
+    })
+    .then(() => {
+      renderTable(sessions, members);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('table').innerHTML =
+        `<p class="text-danger">Error al carregar els esportistes.</p>`;
+    });
+}
+
+function getAllEntrenadorsNames(sessions, members) {
+  fetch('http://localhost:3000/api/entrenadors')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch entrenadors');
+      }
+      return response.json();
+    })
+    .then(entrenadors => {
+      sessions.forEach(sessio => {
+        const entrenador = entrenadors.find(e => e.dni === sessio.entrenador);
+        if (entrenador) {
+          sessio.entrenadorNom = `${entrenador.nom} ${entrenador.cognoms}`;
+        } else {
+          sessio.entrenadorNom = 'Entrenador no trobat';
+        }
+      });
+      getAllEsportistesNames(sessions, members);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('table').innerHTML =
+        `<p class="text-danger">Error al carregar els entrenadors.</p>`;
     });
 }
 
@@ -153,7 +201,6 @@ async function loadValoracionsEntrenador(dni) {
 function goToUpdate(id) {
   window.location.href = `updateSessio.html?id=${id}`;
 }
-
 
 function setupSearch() {
   const searchInput = document.getElementById('search-bar');

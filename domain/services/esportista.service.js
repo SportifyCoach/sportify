@@ -10,6 +10,12 @@ class EsportistaService {
     return docs.map(d => new Esportista(d));
   }
 
+  async getByDni(dni) {
+    const doc = await repo.findByDni(dni);
+    if (!doc) throw new Error('Esportista no trobat');
+    return new Esportista(doc);
+  }
+
   async add(data) {
     if (await repo.findByDni(data.dni))
       throw new Error('DNI ja registrat');

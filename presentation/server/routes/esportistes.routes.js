@@ -51,6 +51,9 @@ router.get('/', ctrl.getAll);
  *       201:
  *         description: Esportista creat correctament
  */
+
+router.get('/:dni', ctrl.getByDni);
+
 router.post('/', ctrl.create);
 
 /**

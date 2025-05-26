@@ -10,6 +10,14 @@ exports.getAll = async (_req, res, next) => {
   } catch (e) { next(e); }
 };
 
+exports.getByDni = async (req, res, next) => {
+  try {
+    const { dni } = req.params;
+    const esportista = await service.getByDni(dni);
+    res.json(esportista);
+  } catch (e) { next(e); }
+}
+
 exports.create = async (req, res, next) => {
   console.log('[DEBUG] Body rebut:', req.body)
   try {
