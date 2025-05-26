@@ -24,14 +24,14 @@ function renderTable(sessions, members) {
     // Convertir la data a un format llegible
     const date = new Date(sessio.date);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-    sessio.date = date.toLocaleDateString('ca-ES', options);
+    const formattedDate = date.toLocaleDateString('ca-ES', options);
 
     sessio.disciplina = sessio.disciplina.toUpperCase();
 
     table.innerHTML += `
           <div class="session">
               <div class="session-title">
-                  <span> <strong> ${sessio.disciplina} </strong> - ${sessio.date}  </span> 
+                  <span> <strong> ${sessio.disciplina} </strong> - ${formattedDate}  </span> 
                   <span> <strong> Entrenador/a: </strong> ${sessio.entrenadorNom} - <strong>Val. entrenador: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
               </div>
               <table class="table">
