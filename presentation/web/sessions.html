@@ -30,23 +30,22 @@
             </div>
         </div>
         <div class="container">
-            <!-- Fons fosc + Popup -->
-            <div id="popupFonsSessio" class="popup-fons">
+            <div id="popupFons" class="popup-fons">
                 <div class="popup">
                     <span class="tancar-popup" id="tancarPopupSessio">&times;</span>
                     <h2>Registrar Sessió</h2>
-                    <form id="registreSessioForm"> <!-- TODO -->
-                        <label for="titol">Títol:</label>
-                        <input type="text" id="titol" name="titol" required>
+                    <form id="registreForm">
+                        <label for="datetime">Data i hora:</label>
+                        <input type="datetime-local" id="datetime" name="datetime" required>
 
-                        <label for="data">Data:</label>
-                        <input type="date" id="data" name="data" required>
-
-                        <label for="hora">Hora:</label>
-                        <input type="time" id="hora" name="hora" required>
+                        <label for="limit_persones">Límit participants:</label>
+                        <input type="number" id="limit_persones" name="limit_persones" required>
 
                         <label for="disciplina">Disciplina:</label>
                         <input type="text" id="disciplina" name="disciplina" required>
+
+                        <label for="entrenador">Entrenador:</label>
+                        <input type="text" id="entrenador" name="entrenador" required>
 
                         <button type="submit">Enviar</button>
                         <p id="missatge" class="error"></p>
@@ -74,19 +73,6 @@
                 </div>
             </div>
 
-            <div id="popupInscrits" class="popup-fons">
-                <div class="popup">
-                    <span class="tancar-popup" id="tancarPopupInscrits">&times;</span>
-                    <h2>Inscrits a la sessió</h2>
-                    <p id="textInscritsSessio"></p>
-                    <input type="text" id="dniEntrenadorCheck" placeholder="DNI de l'entrenador">
-                    <button id="verificarEntrenador">Mostrar inscrits</button>
-                    <ul id="llistaInscrits"></ul>
-                    <p id="missatgeInscrits"></p>
-                </div>
-            </div>
-
-            <!-- Fons fosc + Popup de confirmació d'eliminació -->
             <div id="popupFonsDeleteSessio" class="popup-fons">
                 <div class="popup">
                     <span class="tancar-popup" id="tancarPopupDeleteSessio">&times;</span>
