@@ -278,7 +278,10 @@ for i in range(200):
         (valoracio, sessio_id, esportista_dni) 
         VALUES (%s, %s, %s);
     """
-    do_query(c, q, (valoracio, sessio_id, esportista_dni))
+    try:
+        do_query(c, q, (valoracio, sessio_id, esportista_dni))
+    except:
+        continue
 
 conn.commit()
 print("S'han afegit els entrenaments.")

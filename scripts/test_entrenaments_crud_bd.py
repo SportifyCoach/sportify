@@ -43,11 +43,12 @@ if opt.init:
                 sessio_id INT,
                 esportista_dni VARCHAR(9),
                 FOREIGN KEY (sessio_id) REFERENCES sessio(id)
-                        ON DELETE CASCADE
-                        ON UPDATE CASCADE,
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE,
                 FOREIGN KEY (esportista_dni) REFERENCES esportista(dni)
-                        ON DELETE CASCADE
-                        ON UPDATE CASCADE
+                    ON DELETE CASCADE
+                    ON UPDATE CASCADE,
+                UNIQUE (esportista_dni, sessio_id)
             );
         """)
     except Exception as e:
@@ -56,7 +57,7 @@ if opt.init:
         if y == 'y':
             do_query(c, f"DROP TABLE `{tabname}`;")
             do_query(c, f"""
-                CREATE TABLE `{tabname}` (
+                CREATE TABLE IF NOT EXISTS `{tabname}` (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     valoracio FLOAT,
                     sessio_id INT,
@@ -66,7 +67,8 @@ if opt.init:
                         ON UPDATE CASCADE,
                     FOREIGN KEY (esportista_dni) REFERENCES esportista(dni)
                         ON DELETE CASCADE
-                        ON UPDATE CASCADE
+                        ON UPDATE CASCADE,
+                    UNIQUE (esportista_dni, sessio_id)
                 );
             """)
     conn.commit()
