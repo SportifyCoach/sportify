@@ -436,7 +436,7 @@ function applyFilters() {
   let filteredS = allSessions.filter(s => {
     const matchDisc = s.disciplina.toLowerCase().includes(disFilter);
     const matchEnt  = s.entrenadorNom.toLowerCase().includes(entFilter);
-    return matchDisc && matchEnt;
+    return matchDisc && matchEnt && s.date;
   });
 
   // 2) Si hi ha text d’esportista, només quedin sessions amb algun member coincident
