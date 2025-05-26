@@ -69,7 +69,7 @@ function renderTable(sessions, members) {
                       <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button>
                   </div>
                   <div class="session-footer-row">
-                      <button id="add-member-${sessio.id}" class="btn btn-danger small">Eliminar Participants</button> <!--todo-->
+                      <button id="add-member-${sessio.id}" class="btn btn-danger small" onclick="mostrarDeleteParticipant(${sessio.id})">Eliminar Participants</button> <!--todo-->
                       <button id="del-m-${sessio.id}" class="btn btn-danger small" onclick="confirmDelete(${sessio.id})">Eliminar Sessió</button>
                   </div>
               </div>
@@ -265,6 +265,7 @@ window.addEventListener("click", (e) => {
 });
 
 let sessioAInscriure = null;
+let sessioABorrar = null;
 
 function mostrarInscripcio(sessioId) {
   sessioAInscriure = sessioId;
@@ -274,6 +275,16 @@ function mostrarInscripcio(sessioId) {
   document.getElementById('dniInscripcio').value = '';
   document.getElementById('missatgeInscripcio').textContent = '';
   document.getElementById('popupInscripcio').style.display = 'flex';
+}
+
+function mostrarDeleteParticipant(sessioId) {
+  sessioABorrar = sessioId;
+  document.getElementById('textSessioDeleteParticipant').textContent = `Eliminar participant a la sessió ID ${sessioId}`;
+  document.getElementById('dniDelete').style.display = '';
+  document.getElementById('confirmarDelete').style.display = '';
+  document.getElementById('dniDelete').value = '';
+  document.getElementById('missatgeDelete').textContent = '';
+  document.getElementById('popupDeleteParticipant').style.display = 'flex';
 }
 
 function tooLate(sessioId) {
@@ -296,6 +307,10 @@ function noMoreSpace(sessioId) {
 
 document.getElementById('tancarPopupInscripcio').addEventListener('click', () => {
   document.getElementById('popupInscripcio').style.display = 'none';
+});
+
+document.getElementById('tancarPopupDeleteParticipant').addEventListener('click', () => {
+  document.getElementById('popupDeleteParticipant').style.display = 'none';
 });
 
 document.getElementById('confirmarInscripcio').addEventListener('click', () => {
@@ -323,6 +338,39 @@ document.getElementById('confirmarInscripcio').addEventListener('click', () => {
       console.log('Error:', err);
       missatge.style.color = 'red';
       missatge.textContent = 'Error al realitzar la inscripció';
+    });
+});
+
+document.getElementById('confirmarDelete').addEventListener('click', () => {
+  const dni = document.getElementById('dniDelete').value;
+  const missatge = document.getElementById('missatgeDelete');
+
+  fetch('http://localhost:3000/api/entrenaments', {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessio_id: sessioABorrar, esportista_dni: dni }),
+  })
+    .then(res => {
+      if (!res.ok) return res.json().then(err => { throw new Error(err.error) });
+      return res.text();
+    })
+    .then(() => {
+      missatge.style.color = 'green';
+      missatge.textContent = 'Eliminat correctament!';
+      setTimeout(() => {
+        document.getElementById('popupDeleteParticipant').style.display = 'none';
+        loadSessions(); // refresca
+      }, 1500);
+    })
+    .catch(err => {
+      console.log(err);
+      missatge.style.color = 'red';
+      if (err.message === 'Entrenament no trobat') {
+        missatge.textContent = 'Error: No existeix el participant a la sessió';
+      } else {
+        console.log('Error:', err);
+        missatge.textContent = 'Error al eliminar';
+      }
     });
 });
 

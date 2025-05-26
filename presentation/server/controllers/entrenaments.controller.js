@@ -31,3 +31,19 @@ exports.create = async (req, res, next) => {
         res.status(201).json(created);
     } catch (e) { next(e); }
 };
+
+exports.removeInscripcio = async (req, res) => {
+    try {
+        const resultat = await service.deleteInscripcio(req.body);
+        if (resultat.affectedRows === 0) {
+          return res.status(404).json({ error: "No s'ha trobat la inscripció." });
+        }
+        res.status(200).send('Inscripció eliminada correctament');
+    }   catch (err) {
+        if (err.status = 404) {
+            return res.status(404).json({ error: err.message });
+        }
+        console.error('Error eliminant inscripció:', err);
+        res.status(500).json({ error: 'Error intern del servidor' });
+    }
+}

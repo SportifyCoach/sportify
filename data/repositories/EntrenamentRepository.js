@@ -35,6 +35,15 @@ class EntrenamentRepository {
     const newId = result.insertId;
     return this.findById(newId);
   }
+
+  async delete(data) {
+    const { sessio_id, esportista_dni } = data;
+    const [res] = await getPool().query(
+      'DELETE FROM entrenament WHERE sessio_id = :sessio_id AND esportista_dni = :esportista_dni',
+      { sessio_id, esportista_dni },
+    );
+    return { deletedCount: res.affectedRows };
+  }
 }
 
 module.exports = new EntrenamentRepository();
