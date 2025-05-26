@@ -1,4 +1,5 @@
 let allSessions = [];
+let allMembers  = [];
 let sessioAEliminar = null;
 
 const popupFonsDeleteSessio = document.getElementById("popupFonsDeleteSessio");
@@ -87,6 +88,7 @@ function loadSessions() {
       return response.json();
     })
     .then(data => {
+      allSessions = data;
       loadMembers(data);
     })
     .catch(error => {
@@ -105,6 +107,7 @@ function loadMembers(sessions) {
       return response.json();
     })
     .then(members => {
+      allMembers = members;
       getAllEntrenadorsNames(sessions, members);
     })
     .catch(error => {
@@ -422,6 +425,42 @@ document.getElementById('confirmarDelete').addEventListener('click', () => {
         missatge.textContent = 'Error al eliminar';
       }
     });
+});
+
+function applyFilters() {
+  const disFilter  = document.getElementById('search-bar-dis').value.trim().toLowerCase();
+  const espFilter  = document.getElementById('search-bar-esp').value.trim().toLowerCase();
+  const entFilter  = document.getElementById('search-bar-ent').value.trim().toLowerCase();
+
+  // 1) Filtra per disciplina i entrenador
+  let filteredS = allSessions.filter(s => {
+    const matchDisc = s.disciplina.toLowerCase().includes(disFilter);
+    const matchEnt  = s.entrenadorNom.toLowerCase().includes(entFilter);
+    return matchDisc && matchEnt;
+  });
+
+  // 2) Si hi ha text d’esportista, només quedin sessions amb algun member coincident
+  if (espFilter) {
+    filteredS = filteredS.filter(s => {
+      // troba membres d’aquesta sessió amb esportistaName que inclogui espFilter
+      return allMembers.some(m =>
+        m.sessio_id === s.id &&
+        m.esportistaName.toLowerCase().includes(espFilter)
+      );
+    });
+  }
+
+  renderTable(filteredS, allMembers);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadSessions();
+  // Quan l’usuari escriu, reaplica filtres:
+  ['dis','esp','ent'].forEach(type => {
+    document
+      .getElementById(`search-bar-${type}`)
+      .addEventListener('input', applyFilters);
+  });
 });
 
 let sessioAConsultar = null;
