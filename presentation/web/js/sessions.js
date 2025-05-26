@@ -22,8 +22,8 @@ function renderTable(sessions, members) {
 
     // Convertir la data a un format llegible
     const date = new Date(sessio.date);
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    sessio.date = date.toLocaleDateString('ca-ES', options)
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    sessio.date = date.toLocaleDateString('ca-ES', options);
 
     sessio.disciplina = sessio.disciplina.toUpperCase();
 
