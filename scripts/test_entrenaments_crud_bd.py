@@ -119,3 +119,4 @@ else:
     optp.print_help()
 
 c.close()
+conn.close()
