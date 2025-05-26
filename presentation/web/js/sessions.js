@@ -69,7 +69,7 @@ function renderTable(sessions, members) {
                       <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button>
                   </div>
                   <div class="session-footer-row">
-                      <button id="add-member-${sessio.id}" class="btn btn-danger small" onclick="mostrarDeleteParticipant(${sessio.id})">Eliminar Participants</button> <!--todo-->
+                      <button id="del-member-${sessio.id}" class="btn btn-danger small" onclick="mostrarDeleteParticipant(${sessio.id})">Eliminar Participants</button> <!--todo-->
                       <button id="del-m-${sessio.id}" class="btn btn-danger small" onclick="confirmDelete(${sessio.id})">Eliminar Sessió</button>
                   </div>
               </div>
