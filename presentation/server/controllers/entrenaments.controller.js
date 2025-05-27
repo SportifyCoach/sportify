@@ -32,6 +32,16 @@ exports.create = async (req, res, next) => {
     } catch (e) { next(e); }
 };
 
+exports.update = async (req, res, next) => {
+    try {
+        const updated = await service.update(req.params.id, req.body.valoracio);
+        if (updated.affectedRows === 0) {
+            return res.status(404).json({ error: "No s'ha trobat l'entrenament." });
+        }
+        res.status(200).json(updated);
+    } catch (e) { next(e); }
+};
+
 exports.removeInscripcio = async (req, res) => {
     try {
         const resultat = await service.deleteInscripcio(req.body);

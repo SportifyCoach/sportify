@@ -7,6 +7,7 @@ const ctrl = require('../controllers/entrenaments.controller');
 router.get('/',     ctrl.getAll);
 router.get('/:id',     ctrl.getBySessionId);
 router.post('/',    ctrl.create);
+router.put('/:id', ctrl.update);
 router.delete('/', ctrl.removeInscripcio);
 
 module.exports = router;

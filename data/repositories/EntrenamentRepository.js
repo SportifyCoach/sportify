@@ -36,6 +36,20 @@ class EntrenamentRepository {
     return this.findById(newId);
   }
 
+  async update(data) {
+    const { id, valoracio } = data;
+    const [result] = await getPool().query(
+      `UPDATE entrenament
+       SET valoracio = :valoracio
+       WHERE id = :id`,
+      { id, valoracio },
+    );
+    if (result.affectedRows === 0) {
+      throw new Error('Entrenament no trobat');
+    }
+    return this.findById(id);
+  }
+
   async delete(data) {
     const { sessio_id, esportista_dni } = data;
     const [res] = await getPool().query(

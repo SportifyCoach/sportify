@@ -367,3 +367,16 @@ form button:hover {
     display: flex;
     gap: 10px;
 }
+
+.edit_val {
+    padding: 0;
+    margin: 0;
+    height: 20px;
+    cursor: pointer;
+}
+
+.edit_val:hover {
+    border-radius: 10px;
+    border-color: 1px solid black;
+    background-color: #c7c3c3;
+}
