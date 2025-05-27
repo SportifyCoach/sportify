@@ -21,6 +21,18 @@ function renderTable(sessions, members) {
     // Filtrar els membres que coincideixen amb la sessio
     const filteredMembers = members.filter(member => member.sessio_id === sessio.id);
 
+    let valoracio = 0;
+    filteredMembers.forEach(member => {
+      valoracio += member.valoracio;
+    })
+
+    // Calcula valoració mitjana
+    if (valoracio != 0) {
+      sessio.valMitja = (valoracio / filteredMembers.length).toFixed(1);
+    } else {
+      sessio.valMitja = "-";
+    }
+
     // Convertir la data a un format llegible
     const date = new Date(sessio.date);
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
@@ -32,7 +44,7 @@ function renderTable(sessions, members) {
           <div class="session">
               <div class="session-title">
                   <span> <strong> ${sessio.disciplina} </strong> - ${formattedDate}  </span> 
-                  <span> <strong> Entrenador/a: </strong> ${sessio.entrenadorNom} - <strong>Val. entrenador: </strong>${Number(sessio.valMitja).toFixed(2)}</span>
+                  <span> <strong> Entrenador/a: </strong> ${sessio.entrenadorNom} (${Number(sessio.valMitjaEnt)}/10)</span>
               </div>
               <table class="table">
                   <thead>
@@ -47,11 +59,16 @@ function renderTable(sessions, members) {
                           <tr>
                               <td>${member.esportistaName}</td>
                               <td> ${member.valoracio ? member.valoracio : '-'}</td>
-                              <td style="text-align: right; width: 20px;"><img class="edit_val" src="../img/edit.png" alt="Editar Valoració" 
+                              <td style="text-align: right; width: 20px; align-items: center; padding: 5px 11px 0 11px;"><img class="edit_val" src="../img/edit.png" alt="Editar Valoració" 
                                 onclick="updateVal(${member.esportista_dni, sessio.id})"></td>
                           </tr>
                       `).join('')}
                   </tbody>
+                  <thead>
+                        <tr>
+                          <th>Mitjana Sessió</th>
+                          <th>${sessio.valMitja}</th>
+                          <th></th>
               </table>
               <div class="session-footer">
                   <div class="session-footer-row">
@@ -140,7 +157,7 @@ function getAllEsportistesNames(sessions, members) {
     .then(() => {
       const promises = sessions.map(async (sessio) => {
         const valoracio = await loadValoracionsEntrenador(sessio.entrenador);
-        sessio.valMitja = valoracio !== null ? valoracio : 0;
+        sessio.valMitjaEnt = valoracio !== null ? valoracio : 0;
       });
       return Promise.all(promises);
     })
@@ -194,7 +211,7 @@ async function loadValoracionsEntrenador(dni) {
     if (valids.length === 0) return 0;
 
     const total = valids.reduce((sum, val) => sum + val, 0);
-    const mitjana = total / valids.length;
+    const mitjana = (total / valids.length).toFixed(1);
 
     return mitjana;
   } catch (err) {
