@@ -367,3 +367,9 @@ form button:hover {
     display: flex;
     gap: 10px;
 }
+
+.edit_val {
+    padding: 0;
+    margin: 0;;
+    height: 20px;
+  }

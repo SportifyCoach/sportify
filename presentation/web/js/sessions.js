@@ -39,13 +39,16 @@ function renderTable(sessions, members) {
                       <tr>
                           <th>Participants</th>
                           <th>Valoració</th>
+                          <th></th>
                       </tr>
                   </thead>
                   <tbody>
                       ${filteredMembers.map(member => `
                           <tr>
                               <td>${member.esportistaName}</td>
-                              <td>${member.valoracio ? member.valoracio : '-'}</td>
+                              <td> ${member.valoracio ? member.valoracio : '-'}</td>
+                              <td style="text-align: right; width: 20px;"><img class="edit_val" src="../img/edit.png" alt="Editar Valoració" 
+                                onclick="updateVal(${member.esportista_dni, sessio.id})"></td>
                           </tr>
                       `).join('')}
                   </tbody>
@@ -61,9 +64,8 @@ function renderTable(sessions, members) {
                             tooLate(${sessio.id});
                           } else {
                             ${filteredMembers.length == sessio.limit_persones
-        ? `noMoreSpace(${sessio.id});`
-        : `mostrarInscripcio(${sessio.id});`
-      }
+                              ? `noMoreSpace(${sessio.id});` : `mostrarInscripcio(${sessio.id});`
+                            }
                           }
                         })()">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}
                       </button>
