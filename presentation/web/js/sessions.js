@@ -1,16 +1,21 @@
 let allSessions = [];
-let allMembers  = [];
+let allMembers = [];
 let sessioAEliminar = null;
+let valId = null;
 
 const popupFonsDeleteSessio = document.getElementById("popupFonsDeleteSessio");
 const tancarPopupDeleteSessio = document.getElementById("tancarPopupDeleteSessio");
 const confirmarDeleteSessio = document.getElementById("confirmarDeleteSessio");
-const cancelarDeleteSessio = document.getElementById("cancelarDeleteSessio");
 const textConfirmacioSessio = document.getElementById("textConfirmacioSessio");
 
 const obrirPopupSessio = document.getElementById("obrirPopupSessio");
 const popupFons = document.getElementById("popupFons");
 const tancarPopupSessio = document.getElementById("tancarPopupSessio");
+
+const popupFonsUpdateVal = document.getElementById("popupFonsUpdateVal");
+const tancarPopupValoracio = document.getElementById("tancarPopupValoracio");
+const confirmarValoracio = document.getElementById("confirmarValoracio");
+const valoracioInput = document.getElementById("valUpdate");
 
 
 function renderTable(sessions, members) {
@@ -22,13 +27,17 @@ function renderTable(sessions, members) {
     const filteredMembers = members.filter(member => member.sessio_id === sessio.id);
 
     let valoracio = 0;
+    let count = 0;
     filteredMembers.forEach(member => {
-      valoracio += member.valoracio;
+      if (member.valoracio) {
+        valoracio += member.valoracio;
+        count += 1;
+      }
     })
 
     // Calcula valoració mitjana
     if (valoracio != 0) {
-      sessio.valMitja = (valoracio / filteredMembers.length).toFixed(1);
+      sessio.valMitja = (valoracio / count).toFixed(1);
     } else {
       sessio.valMitja = "-";
     }
@@ -58,9 +67,11 @@ function renderTable(sessions, members) {
                       ${filteredMembers.map(member => `
                           <tr>
                               <td>${member.esportistaName}</td>
-                              <td> ${member.valoracio ? member.valoracio : '-'}</td>
-                              <td style="text-align: right; width: 20px; align-items: center; padding: 5px 11px 0 11px;"><img class="edit_val" src="../img/edit.png" alt="Editar Valoració" 
-                                onclick="updateVal(${member.esportista_dni, sessio.id})"></td>
+                              <td> ${member.valoracio ? member.valoracio.toFixed(1) : '-'}</td>
+                              <td style="text-align: right; width: 20px; padding: 5px 11px 0 11px;">
+                                <img class="edit_val" src="../img/edit.png" alt="Editar Valoració" 
+                                  onclick="checkDateEdit('${formattedDate}', ${member.id})">
+                              </td>
                           </tr>
                       `).join('')}
                   </tbody>
@@ -69,33 +80,52 @@ function renderTable(sessions, members) {
                           <th>Mitjana Sessió</th>
                           <th>${sessio.valMitja}</th>
                           <th></th>
+                        </tr>
+                  </thead>
               </table>
               <div class="session-footer">
                   <div class="session-footer-row">
                       <button id="add-member-${sessio.id}" class="btn btn-success small" onclick="
-                        (function() {
-                          const parts = '${sessio.date}'.split('/');
-                          const sessioDate = new Date(parts[2], parts[1] - 1, parts[0]);
-                          const now = new Date();
-                          if (sessioDate <= now) {
-                            tooLate(${sessio.id});
-                          } else {
-                            ${filteredMembers.length == sessio.limit_persones
-                              ? `noMoreSpace(${sessio.id});` : `mostrarInscripcio(${sessio.id});`
-                            }
-                          }
-                        })()">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}
-                      </button>
+                        checkDateAdd('${formattedDate}', ${sessio.id}, ${filteredMembers.length}, ${sessio.limit_persones})
+                          ">Afegir Participants ${filteredMembers.length}/${sessio.limit_persones}</button>
                       <button id="edit-sessio-${sessio.id}" class="btn btn-primary small" onclick="goToUpdate(${sessio.id})">Editar Sessió</button>
                   </div>
                   <div class="session-footer-row">
-                      <button id="del-member-${sessio.id}" class="btn btn-danger small" onclick="mostrarDeleteParticipant(${sessio.id})">Eliminar Participants</button> <!--todo-->
-                      <button id="del-m-${sessio.id}" class="btn btn-danger small" onclick="confirmDelete(${sessio.id})">Eliminar Sessió</button>
+                      <button id="del-member-${sessio.id}" class="btn btn-danger small" onclick="mostrarDeleteParticipant(${sessio.id})">Eliminar Participants</button>
+                      <button id="del-${sessio.id}" class="btn btn-danger small" onclick="confirmDelete(${sessio.id})">Eliminar Sessió</button>
                   </div>
               </div>
           </div>
       `;
   });
+}
+
+function checkDateEdit(sessio_date, member) {
+  const dateStr = sessio_date;
+  const [datePart, timePart] = dateStr.split(' ');
+  const [day, month, year] = datePart.split('/');
+  const [hours, minutes] = timePart.split(':');
+  
+  const sessioDate = new Date(year, month - 1, day, hours, minutes);
+  const now = new Date();
+  if (sessioDate <= now) {
+    updateVal(member);
+  }
+}
+
+function checkDateAdd(sessio_date, sessio_id, f_len, sessio_limit) {
+  const dateStr = sessio_date;
+  const [datePart, timePart] = dateStr.split(' ');
+  const [day, month, year] = datePart.split('/');
+  const [hours, minutes] = timePart.split(':');
+  
+  const sessioDate = new Date(year, month - 1, day, hours, minutes);
+  const now = new Date();
+  if (sessioDate <= now) {
+    tooLate(sessio_id)
+  } else {
+    f_len == sessio_limit ? noMoreSpace(sessio_id) : mostrarInscripcio(sessio_id);
+  }
 }
 
 function loadSessions() {
@@ -235,15 +265,6 @@ function setupSearch() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  loadSessions();
-  //setupSearch();
-  // Botons de filtratge
-  //document.getElementById('mostrarDisponibles').addEventListener('click', loadAvailableSessions);
-  //document.getElementById('mostrarTotes').addEventListener('click', loadSessions);
-});
-
-
 obrirPopupSessio.addEventListener("click", () => popupFons.style.display = "flex");
 tancarPopupSessio.addEventListener("click", () => popupFons.style.display = "none");
 
@@ -317,11 +338,6 @@ confirmarDeleteSessio.addEventListener("click", () => {
       popupFonsDeleteSessio.style.display = "none";
       sessioAEliminar = null;
     });
-});
-
-cancelarDeleteSessio.addEventListener("click", () => {
-  popupFonsDeleteSessio.style.display = "none";
-  sessioAEliminar = null;
 });
 
 tancarPopupDeleteSessio.addEventListener("click", () => {
@@ -447,14 +463,14 @@ document.getElementById('confirmarDelete').addEventListener('click', () => {
 });
 
 function applyFilters() {
-  const disFilter  = document.getElementById('search-bar-dis').value.trim().toLowerCase();
-  const espFilter  = document.getElementById('search-bar-esp').value.trim().toLowerCase();
-  const entFilter  = document.getElementById('search-bar-ent').value.trim().toLowerCase();
+  const disFilter = document.getElementById('search-bar-dis').value.trim().toLowerCase();
+  const espFilter = document.getElementById('search-bar-esp').value.trim().toLowerCase();
+  const entFilter = document.getElementById('search-bar-ent').value.trim().toLowerCase();
 
   // 1) Filtra per disciplina i entrenador
   let filteredS = allSessions.filter(s => {
     const matchDisc = s.disciplina.toLowerCase().includes(disFilter);
-    const matchEnt  = s.entrenadorNom.toLowerCase().includes(entFilter);
+    const matchEnt = s.entrenadorNom.toLowerCase().includes(entFilter);
     return matchDisc && matchEnt && s.date;
   });
 
@@ -472,10 +488,48 @@ function applyFilters() {
   renderTable(filteredS, allMembers);
 }
 
+function updateVal(id) {
+  valId = id;
+  popupFonsUpdateVal.style.display = "flex";
+  valoracioInput.style.display = "";
+  valoracioInput.value = "";
+}
+
+confirmarValoracio.addEventListener("click", () => { confirmUpdate() });
+tancarPopupValoracio.addEventListener("click", () => { cancelUpdate() });
+
+function confirmUpdate() {
+  valoracio = valoracioInput.value;
+  if (valoracio === "") valoracio = null;
+  fetch(`http://localhost:3000/api/entrenaments/${valId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ valoracio })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Error al actualitzar la valoració');
+      return res.text();
+    })
+    .then(() => {
+      alert('Valoració actualitzada correctament');
+      popupFonsUpdateVal.style.display = "none";
+      valId = null;
+      valoracioInput.value = "";
+      loadSessions(); // refresca la taula
+    })
+    .catch(err => alert(err.message));
+}
+
+function cancelUpdate() {
+  popupFonsUpdateVal.style.display = "none";
+  valId = null;
+  document.getElementById("valUpdate").value = "";
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadSessions();
   // Quan l’usuari escriu, reaplica filtres:
-  ['dis','esp','ent'].forEach(type => {
+  ['dis', 'esp', 'ent'].forEach(type => {
     document
       .getElementById(`search-bar-${type}`)
       .addEventListener('input', applyFilters);

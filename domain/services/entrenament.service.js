@@ -25,6 +25,12 @@ class EntrenamentService {
     return new Entrenament(doc);
   }
 
+  async update(id, valoracio) {
+    const doc = await repo.update({id, valoracio});
+    if (!doc) throw new Error('Entrenament no trobat');
+    return new Entrenament(doc);
+  }
+
   async deleteInscripcio(data) {
     const ok = await repo.delete(data);
     if (ok.deletedCount === 0) throw new Error('Entrenament no trobat');
